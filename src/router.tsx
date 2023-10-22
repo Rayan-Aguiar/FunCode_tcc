@@ -6,6 +6,8 @@ import NotFound from "./admin/views/NotFound"
 import Dashboard from "./admin/views/Dashboard"
 import Students from "./admin/views/Students"
 import Home from "./home";
+import StudentsHome from "./student/home";
+import StudentsClasses from "./student/classes";
 
 export default function Router(){
     return(
@@ -16,6 +18,9 @@ export default function Router(){
                 <Route path="/admin/dashboard" element={<Dashboard />} />
                 <Route path="/admin/students" element={<Students />} />
                 <Route path="*" element={<NotFound />} />
+
+               <Route path="/students" element={<StudentsHome />} /> 
+               <Route path="/students/classes" element={<StudentsClasses />}/>
             </Routes>
         </BrowserRouter>
     )
