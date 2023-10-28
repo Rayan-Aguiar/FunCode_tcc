@@ -1,5 +1,6 @@
-import { Edit3Icon, Save, User2 } from "lucide-react";
+import { Edit3Icon, User2 } from "lucide-react";
 import StudentsHeader from "../components/header";
+import Button from "../components/Button";
 
 const estados = {
   "": "",
@@ -119,7 +120,9 @@ export default function EditPerfil() {
                 />
               </div>
             </div>
-            <button className="bg-limeyellow w-28 h-10 mt-4 text-roxo rounded-md font-semibold flex justify-center items-center gap-2 hover:bg-[#EBDA3A]">Enviar <Save /></button>
+            <Button 
+              value="Enviar"
+            />
           </div>
         </main>
       </div>

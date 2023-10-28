@@ -9,6 +9,7 @@ import Home from "./home";
 import StudentsHome from "./student/home";
 import StudentsClasses from "./student/classes";
 import EditPerfil from "./student/edit";
+import StudentsSuport from "./student/suport";
 
 export default function Router(){
     return(
@@ -23,6 +24,7 @@ export default function Router(){
                <Route path="/students" element={<StudentsHome />} /> 
                <Route path="/students/classes" element={<StudentsClasses />}/>
                <Route path="/students/edit-perfil" element={<EditPerfil />} /> 
+               <Route path="/students/suport" element={<StudentsSuport />} />
             </Routes>
         </BrowserRouter>
     )
