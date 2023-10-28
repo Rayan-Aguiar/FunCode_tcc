@@ -10,12 +10,15 @@ import StudentsHome from "./student/home";
 import StudentsClasses from "./student/classes";
 import EditPerfil from "./student/edit";
 import StudentsSuport from "./student/suport";
+import SignUp from "./home/SignUp";
 
 export default function Router(){
     return(
         <BrowserRouter>
             <Routes>
                 <Route path="/" element={<Home />}/>
+                <Route path="/signup" element={<SignUp />}/>
+
                 <Route path="/admin" element={<SignIn />}/>
                 <Route path="/admin/dashboard" element={<Dashboard />} />
                 <Route path="/admin/students" element={<Students />} />
