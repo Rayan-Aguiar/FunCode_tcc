@@ -11,6 +11,7 @@ import StudentsClasses from "./student/classes";
 import EditPerfil from "./student/edit";
 import StudentsSuport from "./student/suport";
 import SignUp from "./home/SignUp";
+import AddStudent from "./admin/views/AddStudent";
 
 export default function Router(){
     return(
@@ -22,6 +23,7 @@ export default function Router(){
                 <Route path="/admin" element={<SignIn />}/>
                 <Route path="/admin/dashboard" element={<Dashboard />} />
                 <Route path="/admin/students" element={<Students />} />
+                <Route path="/admin/students/add" element={<AddStudent />}/>
                 <Route path="*" element={<NotFound />} />
 
                <Route path="/students" element={<StudentsHome />} /> 
