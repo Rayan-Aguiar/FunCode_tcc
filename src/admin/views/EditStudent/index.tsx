@@ -1,16 +1,13 @@
 import { Button, Checkbox, Input, Select, Typography, Option, Dialog, DialogHeader, DialogBody, DialogFooter } from "@material-tailwind/react";
 import {
-  Coins,
   Eraser,
-  GraduationCap,
-  HelpCircle,
-  PieChart,
   Save,
   User2,
 } from "lucide-react";
-import { Link } from "react-router-dom";
+import {  useLocation } from "react-router-dom";
 import HeaderAdmin from "../../components/header";
 import { useEffect, useState } from "react";
+import Navigation from "../../components/navegation";
 
 interface FormData {
     nomeAluno: string;
@@ -130,36 +127,13 @@ interface FormData {
       const { name, value } = e.target;
       setFormData({ ...formData, [name]: value });
     };
+
+    const location = useLocation();
+  const currentPath = location.pathname;
   return (
     <div className="bg-gradient-to-br from-gray-100 to-gray-300 w-screen h-screen ">
       <HeaderAdmin />
-      <nav className="w-full h-10 bg-roxo flex items-center px-10 gap-8">
-        <Link to="/admin/dashboard">
-          <Typography className="text-zinc-50 font-semibold w-fit h-full flex items-center gap-2 p-2">
-            <PieChart className="text-limeyellow" /> Dashboard
-          </Typography>
-        </Link>
-        <Link to="/admin/students">
-          <Typography className="text-zinc-50 font-semibold w-fit h-full flex bg-roxo-light items-center gap-2 p-2">
-            <GraduationCap className="text-limeyellow" /> Alunos
-          </Typography>
-        </Link>
-        <Link to="/admin/financial">
-          <Typography className="text-zinc-50 font-semibold w-fit h-full flex  items-center gap-2 p-2">
-            <Coins className="text-limeyellow" /> Financeiro
-          </Typography>
-        </Link>
-        <Link to="/admin/courses">
-          <Typography className="text-zinc-50 font-semibold w-fit h-full flex items-center gap-2 p-2">
-            <Coins className="text-limeyellow" /> Cursos
-          </Typography>
-        </Link>
-        <Link to="/admin/suport">
-          <Typography className="text-zinc-50 font-semibold w-fit h-full  flex items-center gap-2 p-2">
-            <HelpCircle className="text-limeyellow" /> Suporte
-          </Typography>
-        </Link>
-      </nav>
+      <Navigation currentPath={currentPath} />
       <main className="p-8 flex justify-between w-full gap-4">
         <div className="w-1/5 flex flex-col gap-4">
           <div className="bg-white w-full h-60 rounded-lg flex flex-col justify-center items-center gap-4">

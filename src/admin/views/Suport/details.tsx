@@ -1,16 +1,9 @@
-import { Link } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import HeaderAdmin from "../../components/header";
 import { Button, Checkbox, Input, Typography } from "@material-tailwind/react";
-import {
-  Coins,
-  GraduationCap,
-  HelpCircle,
-  PieChart,
-  Save,
-  User2,
-} from "lucide-react";
+import { Save, User2 } from "lucide-react";
 import { useState } from "react";
-
+import Navigation from "../../components/navegation";
 
 interface FormData {
   status: "resolvido" | "emAberto" | "aguardando" | null;
@@ -21,49 +14,21 @@ export default function SuportDetails() {
     status: null,
   });
 
-  
-
-
   const handleCheckboxChange = (status: string) => {
     const newStatus = formData.status === status ? null : status;
     setFormData({ ...formData, status: newStatus as FormData["status"] });
-    
   };
 
-  const handleSave = () =>{
+  const handleSave = () => {
     console.log("Status enviado:", formData);
-  }
+  };
+  const location = useLocation();
+  const currentPath = location.pathname;
 
   return (
     <div className="bg-gradient-to-br from-gray-100 to-gray-300 w-screen md:h-screen h-fit ">
       <HeaderAdmin />
-      <nav className="w-full h-10 bg-roxo flex items-center px-10 gap-8">
-        <Link to="/admin/dashboard">
-          <Typography className="text-zinc-50 font-semibold w-fit h-full flex items-center gap-2 p-2">
-            <PieChart className="text-limeyellow" /> Dashboard
-          </Typography>
-        </Link>
-        <Link to="/admin/students">
-          <Typography className="text-zinc-50 font-semibold w-fit h-full flex items-center gap-2 p-2">
-            <GraduationCap className="text-limeyellow" /> Alunos
-          </Typography>
-        </Link>
-        <Link to="/admin/financial">
-          <Typography className="text-zinc-50 font-semibold w-fit h-full flex  items-center gap-2 p-2">
-            <Coins className="text-limeyellow" /> Financeiro
-          </Typography>
-        </Link>
-        <Link to="/admin/courses">
-          <Typography className="text-zinc-50 font-semibold w-fit h-full flex items-center gap-2 p-2">
-            <Coins className="text-limeyellow" /> Cursos
-          </Typography>
-        </Link>
-        <Link to="/admin/suport">
-          <Typography className="text-zinc-50 font-semibold w-fit h-full bg-roxo-light flex items-center gap-2 p-2">
-            <HelpCircle className="text-limeyellow" /> Suporte
-          </Typography>
-        </Link>
-      </nav>
+      <Navigation currentPath={currentPath} />
       <main className="p-8 flex justify-between w-full gap-4">
         <div className="bg-white w-1/5 h-60 rounded-lg flex flex-col justify-center items-center gap-4">
           <User2 className="w-24 h-24" />
@@ -114,7 +79,13 @@ export default function SuportDetails() {
               </div>
             </div>
             <div className="flex justify-center">
-              <Button className="flex items-center gap-2 bg-limeyellow text-roxo" onClick={handleSave}> <Save/> Salvar</Button>
+              <Button
+                className="flex items-center gap-2 bg-limeyellow text-roxo"
+                onClick={handleSave}
+              >
+                {" "}
+                <Save /> Salvar
+              </Button>
             </div>
           </div>
         </div>
