@@ -1,7 +1,7 @@
 import { Typography } from "@material-tailwind/react";
 
 interface CardAdminProps {
-  icon: IconType;
+  icon?: IconType;
   title: string;
   description: string | number;
 }

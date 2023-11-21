@@ -12,6 +12,9 @@ import EditPerfil from "./student/edit";
 import StudentsSuport from "./student/suport";
 import SignUp from "./home/SignUp";
 import AddStudent from "./admin/views/AddStudent";
+import FinancialAdmin from "./admin/views/Financial";
+import EditStudent from "./admin/views/EditStudent";
+import SuportAdmin from "./admin/views/Suport";
 
 export default function Router(){
     return(
@@ -24,6 +27,9 @@ export default function Router(){
                 <Route path="/admin/dashboard" element={<Dashboard />} />
                 <Route path="/admin/students" element={<Students />} />
                 <Route path="/admin/students/add" element={<AddStudent />}/>
+                <Route path="/admin/students/edit/:id" element={<EditStudent />}/>
+                <Route path="/admin/financial" element={ <FinancialAdmin />} />
+                <Route path="/admin/suport" element={<SuportAdmin />}/>
                 <Route path="*" element={<NotFound />} />
 
                <Route path="/students" element={<StudentsHome />} /> 
