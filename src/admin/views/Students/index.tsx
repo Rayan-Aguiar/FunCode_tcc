@@ -10,8 +10,10 @@ import {
   Plus,
   Search,
 } from "lucide-react";
+import { useState } from "react";
 
 export default function Students() {
+  const [searchTerm, setSearchTerm] = useState<string>(''); 
     interface TableData{
         codigo: number;
         nomeAluno: string;
@@ -42,7 +44,15 @@ export default function Students() {
                             <td className="p-1">{item.nomeResponsavel}</td>
                             <td className="p-1">{item.status}</td>
                             <td className="p-1">
-                                <Button size="sm" color="gray" className="flex items-center gap-2"><Eye/> Visualizar</Button>
+                            <Link to={`/admin/students/edit/${item.codigo}`}>
+                              <Button
+                                size="sm"
+                                color="gray"
+                                className="flex items-center gap-2"
+                              >
+                                <Eye /> Visualizar
+                              </Button>
+                            </Link>
                             </td>
                         </tr>
                     ))}
@@ -109,6 +119,8 @@ export default function Students() {
               type="text"
               label="Buscar aluno(a)"
               icon={<Search />}
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
               crossOrigin={undefined}
             />
           </div>
@@ -123,7 +135,11 @@ export default function Students() {
         </div>
 
         <div className="bg-white w-full h-96 rounded-lg mt-6 overflow-auto">
-            <Table data={data} />
+            <Table data={data.filter(
+              (item) =>
+                item.nomeAluno.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                item.nomeResponsavel.toLowerCase().includes(searchTerm.toLowerCase())
+            )} />
         </div>
       </main>
     </div>

@@ -15,6 +15,7 @@ import AddStudent from "./admin/views/AddStudent";
 import FinancialAdmin from "./admin/views/Financial";
 import EditStudent from "./admin/views/EditStudent";
 import SuportAdmin from "./admin/views/Suport";
+import SuportDetails from "./admin/views/Suport/details";
 
 export default function Router(){
     return(
@@ -30,6 +31,7 @@ export default function Router(){
                 <Route path="/admin/students/edit/:id" element={<EditStudent />}/>
                 <Route path="/admin/financial" element={ <FinancialAdmin />} />
                 <Route path="/admin/suport" element={<SuportAdmin />}/>
+                <Route path="/admin/suport/:id" element={<SuportDetails />}/>
                 <Route path="*" element={<NotFound />} />
 
                <Route path="/students" element={<StudentsHome />} /> 
