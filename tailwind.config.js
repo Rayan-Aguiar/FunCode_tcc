@@ -28,6 +28,7 @@ module.exports = withMT({
 
           // minha cores
           "roxo": "#3E1E75",
+          "roxo-escuro": "#280E56",
           "roxo-light": "#5218B7",
           "roxo-normal": "#4C3F99",
           "limeyellow": "#E9E107",

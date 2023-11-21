@@ -2,7 +2,7 @@ import Kid2 from "../../assets/kid2.png";
 
 export default function About() {
   return (
-    <div className="flex flex-col justify-center items-center text-white mt-12">
+    <div className="flex flex-col justify-center items-center text-white mt-12" id="about">
       <h2 className="font-bold text-4xl text-limeyellow">Sobre nós</h2>
       <div className="w-20 h-1 bg-limeyellow rounded-full"></div>
 
