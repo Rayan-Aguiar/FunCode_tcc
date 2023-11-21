@@ -113,7 +113,7 @@ export default function AddStudent() {
             <Coins className="text-limeyellow" /> Financeiro
           </Typography>
         </Link>
-        <Link to="/admin/classes">
+        <Link to="/admin/courses">
           <Typography className="text-zinc-50 font-semibold w-fit h-full flex items-center gap-2 p-2">
             <Coins className="text-limeyellow" /> Cursos
           </Typography>

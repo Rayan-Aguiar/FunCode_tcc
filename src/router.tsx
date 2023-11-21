@@ -1,4 +1,4 @@
-import {BrowserRouter,  Route, Routes} from "react-router-dom";
+import { BrowserRouter,  Route, Routes } from "react-router-dom";
 // import React from 'react';
 
 import SignIn from "./admin/views/SignIn"
@@ -16,6 +16,7 @@ import FinancialAdmin from "./admin/views/Financial";
 import EditStudent from "./admin/views/EditStudent";
 import SuportAdmin from "./admin/views/Suport";
 import SuportDetails from "./admin/views/Suport/details";
+import CoursesAdmin from "./admin/views/Courses";
 
 export default function Router(){
     return(
@@ -30,6 +31,7 @@ export default function Router(){
                 <Route path="/admin/students/add" element={<AddStudent />}/>
                 <Route path="/admin/students/edit/:id" element={<EditStudent />}/>
                 <Route path="/admin/financial" element={ <FinancialAdmin />} />
+                <Route path="/admin/courses" element={<CoursesAdmin />}/>
                 <Route path="/admin/suport" element={<SuportAdmin />}/>
                 <Route path="/admin/suport/:id" element={<SuportDetails />}/>
                 <Route path="*" element={<NotFound />} />
