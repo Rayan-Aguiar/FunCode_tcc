@@ -34,6 +34,7 @@ const Navigation: React.FC<NavigationProps> = ({ currentPath }) => {
         icon={<Coins className="text-limeyellow" />}
         label="Cursos"
         currentPath={currentPath}
+        dynamicPattern="/admin/courses/"
       />
       <NavItem
         to="/admin/suport"

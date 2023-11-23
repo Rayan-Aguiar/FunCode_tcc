@@ -1,134 +1,140 @@
-import { Button, Checkbox, Input, Select, Typography, Option, Dialog, DialogHeader, DialogBody, DialogFooter } from "@material-tailwind/react";
 import {
-  Eraser,
-  Save,
-  User2,
-} from "lucide-react";
-import {  useLocation } from "react-router-dom";
+  Button,
+  Checkbox,
+  Input,
+  Select,
+  Typography,
+  Option,
+  Dialog,
+  DialogHeader,
+  DialogBody,
+  DialogFooter,
+} from "@material-tailwind/react";
+import { Eraser, Save, User2 } from "lucide-react";
+import { useLocation } from "react-router-dom";
 import HeaderAdmin from "../../components/header";
 import { useEffect, useState } from "react";
 import Navigation from "../../components/navegation";
 
 interface FormData {
-    nomeAluno: string;
-    nomeResponsavel: string;
-    emailAluno: string;
-    emailResponsavel: string;
-    cpf: string;
-    nasc: string;
-    cep: string;
-    cidade: string;
-    end: string;
-    uf: string;
-    bolsa: boolean;
-  }
-  
-  export default function EditStudent() {
-    const [open, setOpen] = useState(false);
- 
-    const handleOpen = () => setOpen(!open);
+  nomeAluno: string;
+  nomeResponsavel: string;
+  emailAluno: string;
+  emailResponsavel: string;
+  cpf: string;
+  nasc: string;
+  cep: string;
+  cidade: string;
+  end: string;
+  uf: string;
+  bolsa: boolean;
+}
 
-    const estados = {
-      "": "",
-      AC: "Acre",
-      AL: "Alagoas",
-      AM: "Amazonas",
-      AP: "Amapá",
-      BA: "Bahia",
-      CE: "Ceará",
-      DF: "Distrito Federal",
-      ES: "Espírito Santo",
-      GO: "Goiás",
-      MA: "Maranhão",
-      MG: "Minas Gerais",
-      MS: "Mato Grosso do Sul",
-      MT: "Mato Grosso",
-      PA: "Pará",
-      PB: "Paraíba",
-      PE: "Pernambuco",
-      PI: "Piauí",
-      PR: "Paraná",
-      RJ: "Rio de Janeiro",
-      RN: "Rio Grande do Norte",
-      RO: "Rondônia",
-      RR: "Roraima",
-      RS: "Rio Grande do Sul",
-      SC: "Santa Catarina",
-      SE: "Sergipe",
-      SP: "São Paulo",
-      TO: "Tocantins",
-    };
+export default function EditStudent() {
+  const [open, setOpen] = useState(false);
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    const data = [
-      {
-        nomeAluno: "João Batista",
-        nomeResponsavel: "Maria João",
-        emailAluno: "teste@teste.com",
-        emailResponsavel: "teste@teste.com",
-        cpf: "123456789-41",
-        nasc: "20/10/2015",
-        cep: "26657-480",
-        cidade: "Rio de Janeiro",
-        end: "Rua sem nome, nº 8",
-        uf: "RJ",
-        bolsa: true,
-      },
-      
-    ];
+  const handleOpen = () => setOpen(!open);
 
-    const [formData, setFormData] = useState<FormData>({
-      nomeAluno: "",
-      nomeResponsavel: "",
-      emailAluno: "",
-      emailResponsavel: "",
-      cpf: "",
-      nasc: "",
-      cep: "",
-      cidade: "",
-      end: "",
-      uf: "",
-      bolsa: false,
-    });
-  
-    useEffect(() => {
-      if (data.length > 0) {
-        const initialData = data[0];
-        setFormData({ ...initialData });
-        if (initialData.bolsa) {
-          setFormData((prevFormData) => ({
-            ...prevFormData,
-            bolsa: initialData.bolsa,
-          }));
-        }
+  const estados = {
+    "": "",
+    AC: "Acre",
+    AL: "Alagoas",
+    AM: "Amazonas",
+    AP: "Amapá",
+    BA: "Bahia",
+    CE: "Ceará",
+    DF: "Distrito Federal",
+    ES: "Espírito Santo",
+    GO: "Goiás",
+    MA: "Maranhão",
+    MG: "Minas Gerais",
+    MS: "Mato Grosso do Sul",
+    MT: "Mato Grosso",
+    PA: "Pará",
+    PB: "Paraíba",
+    PE: "Pernambuco",
+    PI: "Piauí",
+    PR: "Paraná",
+    RJ: "Rio de Janeiro",
+    RN: "Rio Grande do Norte",
+    RO: "Rondônia",
+    RR: "Roraima",
+    RS: "Rio Grande do Sul",
+    SC: "Santa Catarina",
+    SE: "Sergipe",
+    SP: "São Paulo",
+    TO: "Tocantins",
+  };
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const data = [
+    {
+      nomeAluno: "João Batista",
+      nomeResponsavel: "Maria João",
+      emailAluno: "teste@teste.com",
+      emailResponsavel: "teste@teste.com",
+      cpf: "123456789-41",
+      nasc: "20/10/2015",
+      cep: "26657-480",
+      cidade: "Rio de Janeiro",
+      end: "Rua sem nome, nº 8",
+      uf: "RJ",
+      bolsa: true,
+    },
+  ];
+
+  const [formData, setFormData] = useState<FormData>({
+    nomeAluno: "",
+    nomeResponsavel: "",
+    emailAluno: "",
+    emailResponsavel: "",
+    cpf: "",
+    nasc: "",
+    cep: "",
+    cidade: "",
+    end: "",
+    uf: "",
+    bolsa: false,
+  });
+
+  useEffect(() => {
+    if (data.length > 0) {
+      const initialData = data[0];
+      setFormData({ ...initialData });
+      if (initialData.bolsa) {
+        setFormData((prevFormData) => ({
+          ...prevFormData,
+          bolsa: initialData.bolsa,
+        }));
       }
-    }, [data]);
-  
-    const handleInputChange = (
-      e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-    ) => {
-      const { name, value } = e.target;
-      if (name) {
-        setFormData({ ...formData, [name]: value });
-      }
-    };
-  
-    const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const { name, checked } = e.target;
-      setFormData({ ...formData, [name]: checked });
-    };
-  
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-      event.preventDefault();
-      console.table([formData]);
-    };
-  
-    const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-      const { name, value } = e.target;
+    }
+  }, [data]);
+
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target;
+    if (name) {
       setFormData({ ...formData, [name]: value });
-    };
+    }
+  };
 
-    const location = useLocation();
+  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, checked } = e.target;
+    setFormData({ ...formData, [name]: checked });
+  };
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    console.table([formData]);
+  };
+
+  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const location = useLocation();
   const currentPath = location.pathname;
   return (
     <div className="bg-gradient-to-br from-gray-100 to-gray-300 w-screen h-screen ">
@@ -143,29 +149,45 @@ interface FormData {
             </Typography>
           </div>
           <div className="w-full bg-white h-fit p-2 rounded-lg flex justify-center items-center">
-            <Checkbox label="Conceder bolsa?" color="green" checked={formData.bolsa} onChange={handleCheckboxChange} crossOrigin={undefined} />
+            <Checkbox
+              label="Conceder bolsa?"
+              color="green"
+              checked={formData.bolsa}
+              onChange={handleCheckboxChange}
+              crossOrigin={undefined}
+            />
           </div>
-          <Button color="red" className="w-full h-fit flex items-center gap-2 justify-center" onClick={handleOpen}><Eraser/> Excluir aluno?</Button>
+          <Button
+            color="red"
+            className="w-full h-fit flex items-center gap-2 justify-center"
+            onClick={handleOpen}
+          >
+            <Eraser /> Excluir aluno?
+          </Button>
 
           <Dialog open={open} handler={handleOpen}>
             <DialogHeader>Tem certeza?</DialogHeader>
-            <DialogBody>Após a exclusão, não será possivel recuperar os dados do aluno.</DialogBody>
+            <DialogBody>
+              Após a exclusão, não será possivel recuperar os dados do aluno.
+            </DialogBody>
             <DialogFooter>
               <Button
                 variant="text"
                 color="green"
                 onClick={handleOpen}
                 className="mr-1"
-              >Cancelar</Button>
-              <Button
-                variant="text" color="red" onClick={handleOpen}
-              >Confirmar</Button>
+              >
+                Cancelar
+              </Button>
+              <Button variant="text" color="red" onClick={handleOpen}>
+                Confirmar
+              </Button>
             </DialogFooter>
           </Dialog>
         </div>
 
         <div className="bg-white w-4/5 h-fit rounded-lg flex items-center p-4 flex-col">
-        <form
+          <form
             action="POST"
             onSubmit={handleSubmit}
             className="flex flex-col justify-center items-center w-full"
@@ -266,13 +288,13 @@ interface FormData {
                   <Select
                     label="UF"
                     onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-                        handleSelectChange(e)
-                      }
-                      value={formData.uf}
-                      animate={{
-                        mount: { y: 0 },
-                        unmount: { y: 25 },
-                      }}
+                      handleSelectChange(e)
+                    }
+                    value={formData.uf}
+                    animate={{
+                      mount: { y: 0 },
+                      unmount: { y: 25 },
+                    }}
                   >
                     {Object.entries(estados).map(([uf]) => (
                       <Option key={uf} value={uf}>

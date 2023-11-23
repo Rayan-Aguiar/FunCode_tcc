@@ -17,6 +17,9 @@ import EditStudent from "./admin/views/EditStudent";
 import SuportAdmin from "./admin/views/Suport";
 import SuportDetails from "./admin/views/Suport/details";
 import CoursesAdmin from "./admin/views/Courses";
+import AddCourse from "./admin/views/Courses/addCourses";
+import EditCourse from "./admin/views/Courses/editCourse";
+import AddCoursePDF from "./admin/views/Courses/addCoursesPDF";
 
 export default function Router(){
     return(
@@ -32,6 +35,9 @@ export default function Router(){
                 <Route path="/admin/students/edit/:id" element={<EditStudent />}/>
                 <Route path="/admin/financial" element={ <FinancialAdmin />} />
                 <Route path="/admin/courses" element={<CoursesAdmin />}/>
+                <Route path="/admin/courses/add" element={<AddCourse />}/>
+                <Route path="/admin/courses/:id/add-pdf" element={<AddCoursePDF />}/>
+                <Route path="/admin/courses/edit/:id/" element={<EditCourse />}/>
                 <Route path="/admin/suport" element={<SuportAdmin />}/>
                 <Route path="/admin/suport/:id" element={<SuportDetails />}/>
                 <Route path="*" element={<NotFound />} />
