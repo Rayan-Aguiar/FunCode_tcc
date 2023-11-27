@@ -81,7 +81,7 @@ export default function Students() {
     const location = useLocation();
   const currentPath = location.pathname;
   return (
-    <div className="bg-gradient-to-br from-gray-100 to-gray-300 w-screen h-fit ">
+    <div className="bg-gradient-to-br from-gray-100 to-gray-300 w-screen min-h-screen h-fit ">
       <HeaderAdmin />
       <Navigation currentPath={currentPath}/>
 

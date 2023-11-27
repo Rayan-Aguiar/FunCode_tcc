@@ -1,9 +1,7 @@
 import {
-  
   GraduationCap,
   HelpCircle,
-  Landmark,
-  
+  Landmark,  
 } from "lucide-react";
 import CardAdmin from "../../components/card";
 import { useLocation } from "react-router-dom";
@@ -15,12 +13,12 @@ export default function Dashboard() {
   const location = useLocation();
   const currentPath = location.pathname;
   return (
-    <div className="bg-gradient-to-br from-gray-100 to-gray-300 w-screen h-fit ">
+    <div className="bg-gradient-to-br from-gray-100 to-gray-300 w-screen min-h-screen h-fit ">
       <HeaderAdmin />
       <Navigation currentPath={currentPath}/>
       
-      <main className="flex items-center justify-center flex-col">
-        <div className="grid grid-cols-4 md:flex-row justify-around items-center p-8 w-11/12 gap-8">
+      <main className="flex items-center justify-center flex-col p-8">
+        <div className="flex flex-col md:flex-row justify-around w-full items-center gap-8">
           <CardAdmin
             icon={GraduationCap}
             title="Alunos cadastrados"
@@ -31,30 +29,9 @@ export default function Dashboard() {
           <CardAdmin
             icon={HelpCircle}
             title="Suportes em aberto"
-            description="R$ 1200,00"
+            description={10}
           />
 
-          <CardAdmin
-            icon={Landmark}
-            title="Faturamento Mensal"
-            description="R$ 1200,00"
-          />
-
-          <CardAdmin
-            icon={Landmark}
-            title="Faturamento Total"
-            description="R$ 1200,00"
-          />
-          <CardAdmin
-            icon={Landmark}
-            title="Faturamento Mensal"
-            description="R$ 1200,00"
-          />
-          <CardAdmin
-            icon={Landmark}
-            title="Faturamento Mensal"
-            description="R$ 1200,00"
-          />
           <CardAdmin
             icon={Landmark}
             title="Faturamento Mensal"

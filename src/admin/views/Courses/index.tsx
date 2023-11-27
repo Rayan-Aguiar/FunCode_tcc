@@ -12,7 +12,6 @@ export default function CoursesAdmin() {
   interface TableData {
     codigo: number;
     nomeCurso: string;
-    tipoCurso: "Video" | "PDF";
     status: "Ativo" | "Inativo" | null;
   }
   const [searchTerm, setSearchTerm] = useState<string>("");
@@ -27,7 +26,7 @@ export default function CoursesAdmin() {
           <tr className="">
             <th className="p-2">Código</th>
             <th className="p-2">Nome do Curso</th>
-            <th className="p-2">Tipo</th>
+            
             <th className="p-2">Status</th>
             <th className="p-2">Opções</th>
           </tr>
@@ -37,7 +36,7 @@ export default function CoursesAdmin() {
             <tr key={index} className="border-b">
               <td className="p-1">{item.codigo}</td>
               <td className="p-1">{item.nomeCurso}</td>
-              <td className="p-1">{item.tipoCurso}</td>
+             
               <td className="p-1">{item.status}</td>
               <td className="p-1">
                 <Link to={`/admin/courses/edit/${item.codigo}`}>
@@ -61,24 +60,24 @@ export default function CoursesAdmin() {
     {
       codigo: 1,
       nomeCurso: "HTML Básico",
-      tipoCurso: "PDF",
+      
       status: "Ativo",
     },
     {
       codigo: 2,
       nomeCurso: "CSS Básico",
-      tipoCurso: "Video",
+     
       status: "Inativo",
     },
     {
       codigo: 3,
       nomeCurso: "JavaScript Básico",
-      tipoCurso: "PDF",
+      
       status: "Ativo",
     },
   ];
   return (
-      <div className="bg-gradient-to-br from-gray-100 to-gray-300 w-screen h-screen ">
+      <div className="bg-gradient-to-br from-gray-100 to-gray-300 w-screen h-fit min-h-screen ">
         <HeaderAdmin />
         <Navigation currentPath={currentPath} />
         <main className="p-8">

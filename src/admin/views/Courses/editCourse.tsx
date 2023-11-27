@@ -91,6 +91,30 @@ export default function EditCourse() {
     console.log("Dados do Curso:");
     console.log(dadosCurso);
   };
+  const data: TableData[] = [
+    {
+      codigo: 1,
+      nomeCurso: "HTML Básico",
+      tipoCurso: "PDF",
+      status: "Ativo",
+    },
+    {
+      codigo: 2,
+      nomeCurso: "CSS Básico",
+      tipoCurso: "Video",
+      status: "Inativo",
+    },
+    {
+      codigo: 3,
+      nomeCurso: "JavaScript Básico",
+      tipoCurso: "PDF",
+      status: "Ativo",
+    },
+  ];
+
+  const primeiroCurso = data[0];
+
+  const idDoCurso = primeiroCurso.codigo;
 
   return (
     <div className="bg-gradient-to-br from-gray-100 to-gray-300 w-screen h-fit ">
@@ -102,12 +126,18 @@ export default function EditCourse() {
           <div className="flex">
             <Typography variant="h2">Editar curso</Typography>
           </div>
-          <div>
-            <Link to={`/admin/courses/#{}/add-pdf`}>
+          <div className="flex items-center gap-2">
+            <Link to={`/admin/courses/${idDoCurso}/add-pdf`}>
               <Button color="green" className="flex gap-2 items-center">
                 <FileUp /> Material Complementar
               </Button>
             </Link>
+            <Link to={`/admin/courses/${idDoCurso}/quiz`}>
+              <Button color="green" className="flex gap-2 items-center">
+                <FileUp /> Questionário
+              </Button>
+            </Link>
+            
             <Button
               color="red"
               onClick={handleOpen}

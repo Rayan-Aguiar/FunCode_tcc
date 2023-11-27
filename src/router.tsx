@@ -20,6 +20,7 @@ import CoursesAdmin from "./admin/views/Courses";
 import AddCourse from "./admin/views/Courses/addCourses";
 import EditCourse from "./admin/views/Courses/editCourse";
 import AddCoursePDF from "./admin/views/Courses/addCoursesPDF";
+import QuizAdmin from "./admin/views/Courses/quiz";
 
 export default function Router(){
     return(
@@ -37,6 +38,7 @@ export default function Router(){
                 <Route path="/admin/courses" element={<CoursesAdmin />}/>
                 <Route path="/admin/courses/add" element={<AddCourse />}/>
                 <Route path="/admin/courses/:id/add-pdf" element={<AddCoursePDF />}/>
+                <Route path="/admin/courses/:id/quiz" element={<QuizAdmin />}/>
                 <Route path="/admin/courses/edit/:id/" element={<EditCourse />}/>
                 <Route path="/admin/suport" element={<SuportAdmin />}/>
                 <Route path="/admin/suport/:id" element={<SuportDetails />}/>
