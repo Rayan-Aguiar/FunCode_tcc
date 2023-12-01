@@ -2,7 +2,7 @@ import { Link, useLocation } from "react-router-dom";
 import HeaderAdmin from "../../components/header";
 import Navigation from "../../components/navegation";
 import { Button, Input } from "@material-tailwind/react";
-import { Eye, FileUp, Plus, Search } from "lucide-react";
+import { Eye, Plus, Search } from "lucide-react";
 import { useState } from "react";
 
 export default function CoursesAdmin() {
