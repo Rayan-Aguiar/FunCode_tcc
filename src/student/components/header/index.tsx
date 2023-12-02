@@ -2,7 +2,7 @@ import { ArrowDown, User } from "lucide-react";
 import Logo from "../../../assets/logo.png";
 import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Button } from "@material-tailwind/react";
+import { Button, Typography } from "@material-tailwind/react";
 
 export default function StudentsHeader() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -54,7 +54,10 @@ export default function StudentsHeader() {
         </Link>
       </div>
 
-      <div className="relative " ref={dropdownRef}>
+      <div className="relative flex items-center gap-4" ref={dropdownRef}>
+        <Link to="/students/suport">
+          <Typography variant="text" color="white" className="hover:text-limeyellow duration-150">Duvidas?</Typography>
+        </Link>
         <div
           className="w-20 h-12 bg-roxo-escuro rounded-full flex items-center cursor-pointer relative"
           onClick={handleArrowDownClick}

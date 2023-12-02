@@ -52,12 +52,12 @@ export default function StudentsHeader() {
 
       <div className="relative " ref={dropdownRef}>
         <div
-          className="w-20 h-12 bg-roxo-escuro rounded-full flex items-center cursor-pointer relative"
+          className="w-20 h-12 bg-zinc-200 rounded-full flex items-center cursor-pointer relative shadow-md"
           onClick={handleArrowDownClick}
           tabIndex={0}
         >
-          <div className="w-12 h-12 bg-roxo rounded-full flex items-center justify-center">
-            <User className="text-limeyellow" />
+          <div className="w-12 h-12 bg-zinc-300 rounded-full flex items-center justify-center">
+            <User className="text-roxo" />
           </div>
           <ArrowDown
             className={`text-roxo-light duration-300 transition-transform ${
@@ -67,13 +67,13 @@ export default function StudentsHeader() {
         </div>
 
         {dropdownOpen && (
-          <div className="absolute top-14 right-0 bg-roxo-escuro p-2 shadow-md rounded-md flex flex-col justify-center items-center">
+          <div className="absolute top-14 right-0 bg-zinc-400 p-2 shadow-md rounded-md flex flex-col justify-center items-center">
             
             <div>
               <Button
                 onClick={handleLogout}
                 variant="text"
-                className="hover:text-limeyellow text-white duration-150 p-2"
+                className="hover:text-roxo text-white duration-150 p-2"
               >
                 Logout
               </Button>
