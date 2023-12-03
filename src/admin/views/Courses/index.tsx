@@ -33,12 +33,12 @@ export default function CoursesAdmin() {
         </thead>
         <tbody>
           {data.map((item, index) => (
-            <tr key={index} className="border-b">
+            <tr key={index} className="border-b text-center">
               <td className="p-1">{item.codigo}</td>
               <td className="p-1">{item.nomeCurso}</td>
              
               <td className="p-1">{item.status}</td>
-              <td className="p-1">
+              <td className="p-1 flex justify-center">
                 <Link to={`/admin/courses/edit/${item.codigo}`}>
                   <Button
                     size="sm"

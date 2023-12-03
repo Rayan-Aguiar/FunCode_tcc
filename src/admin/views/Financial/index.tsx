@@ -15,6 +15,9 @@ import {
 import { Line } from "react-chartjs-2";
 import faker from "faker";
 import Navigation from "../../components/navegation";
+import CardFinanceiro from "../../components/cardFinanceiro";
+import { useEffect, useState } from "react";
+import { API } from "../../../API/api";
 
 ChartJS.register(
   CategoryScale,
@@ -70,6 +73,22 @@ export default function FinancialAdmin() {
       },
     ],
   };
+
+  const [ userData, setUserData ] = useState([]);
+
+  useEffect(()=>{
+    const fetchData = async() => {
+      try{
+        const response = await API.get("/admin/financial");
+        setUserData(response.data);
+      } catch(error){
+        console.error(error);
+      }
+    };
+    fetchData();
+  }, []);
+
+
   const location = useLocation();
   const currentPath = location.pathname;
   return (
@@ -82,39 +101,18 @@ export default function FinancialAdmin() {
           <Line className="" options={options} data={data} />
         </div>
 
-        <div className="flex md:flex-row flex-col w-full justify-between items-center  mt-6">
-          <div className="w-60 h-36 rounded-md bg-roxo-normal flex flex-col justify-center items-center gap-4">
-            <Typography variant="span" className="text-zinc-50">
-              Alunos pagantes total
-            </Typography>
-            <Typography variant="h3" className="text-zinc-50">
-              300
-            </Typography>
-          </div>
-          <div className="w-60 h-36 rounded-md bg-roxo-normal flex flex-col justify-center items-center gap-4">
-            <Typography variant="span" className="text-zinc-50">
-              Alunos Pagantes Ultimo mês
-            </Typography>
-            <Typography variant="h3" className="text-zinc-50">
-              300
-            </Typography>
-          </div>
-          <div className="w-60 h-36 rounded-md bg-roxo-normal flex flex-col justify-center items-center gap-4">
-            <Typography variant="span" className="text-zinc-50">
-              Alunos Bolsista Total
-            </Typography>
-            <Typography variant="h3" className="text-zinc-50">
-              300
-            </Typography>
-          </div>
-          <div className="w-60 h-36 rounded-md bg-roxo-normal flex flex-col justify-center items-center gap-4">
-            <Typography variant="span" className="text-zinc-50">
-              Alunos Bolsista Ultimo Mês
-            </Typography>
-            <Typography variant="h3" className="text-zinc-50">
-              300
-            </Typography>
-          </div>
+        <div className="flex md:flex-row flex-col w-full justify-around items-center  mt-6">
+          
+          <CardFinanceiro 
+            title="Alunos pagantes total"
+            value={userData.students_paying}
+          />
+
+          <CardFinanceiro 
+            title="Alunos Bolsista total"
+            value={userData.students_scholarship}
+          />
+
         </div>
       </main>
     </div>
