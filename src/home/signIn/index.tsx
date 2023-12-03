@@ -44,6 +44,13 @@ export default function SignInStudents() {
     }
   };
 
+  const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      handleSubmit();
+    }
+  };
+
+
   return (
     <div className="w-screen min-h-screen h-fit bg-gradient-to-br from-[#4C3F99] to-[#0D1635] p-6">
       <Header />
@@ -65,6 +72,7 @@ export default function SignInStudents() {
                   placeholder="Digite seu login"
                   name="email"
                   value={loginData.email}
+                  onKeyPress={handleKeyPress}
                   onChange={handleInputChange}
                   className="w-full h-full outline-none px-2 bg-inherit text-roxo"
                 />

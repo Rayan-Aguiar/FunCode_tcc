@@ -3,6 +3,8 @@ import ReactPlayer from "react-player";
 import StudentsHeader from "../components/header";
 import { Link, useParams } from "react-router-dom";
 import { API } from "../../API/api";
+import { Button } from "@material-tailwind/react";
+import { FileDown, HelpCircle } from "lucide-react";
 
 interface NextClasses {
   id: number;
@@ -38,10 +40,16 @@ export default function StudentsClasses(): JSX.Element {
   }, [id, idclass]);
 
   return (
-    <div className="w-screen md:h-full h-screen bg-gradient-to-br from-[#4C3F99] to-[#0D1635] p-6">
+    <div className="w-screen h-fit min-h-screen bg-gradient-to-br from-[#4C3F99] to-[#0D1635] p-6">
       <StudentsHeader />
 
       <section className="mt-12 flex flex-col items-center justify-center">
+            <div className="flex justify-end items-center gap-4 mb-8">
+              <Button size="sm" className="bg-limeyellow hover:bg-roxo-escuro hover:text-limeyellow text-roxo duration-150 flex gap-2 items-center" ><FileDown /> Material Complementar</Button>
+              <Link to={`/students/courses/${id}/quiz`}>
+                <Button size="sm" className="bg-limeyellow hover:bg-roxo-escuro hover:text-limeyellow text-roxo duration-150 flex gap-2 items-center" ><HelpCircle /> Questionário</Button>
+              </Link>
+            </div>
         {course.current ? (
           <div className="md:w-[1200px] w-full md:h-[550px] overflow-hidden bg-zinc-300 rounded-2xl flex items-center justify-center">
             <ReactPlayer
@@ -72,23 +80,27 @@ export default function StudentsClasses(): JSX.Element {
               </h3>
             )}
           </div>
-          <div className="flex flex-col text-white overflow-auto w-24 h-40 bg-roxo-light/50 justify-center items-center rounded-2xl ">
-            <ul>
-              {course.next_classes?.map((nextClass) => (
-                <li key={nextClass.id}>
-                  <Link
-                    to={`/students/courses/${id}/class/${nextClass.id}`}
-                    className={`font-semibold ${
-                      (nextClass.id) === (course.current?.id)
-                        ? "text-limeyellow"
-                        : ""
-                    }`}
-                  >
-                    {nextClass.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+          <div className="flex gap-3">
+            
+            <div className="flex flex-col text-white overflow-auto w-24 h-40 bg-roxo-light/50 justify-center items-center rounded-2xl ">
+              <ul>
+                {course.next_classes?.map((nextClass) => (
+                  <li key={nextClass.id}>
+                    <Link
+                      to={`/students/courses/${id}/class/${nextClass.id}`}
+                      className={`font-semibold ${
+                        (nextClass.id) === (course.current?.id)
+                          ? "text-limeyellow"
+                          : ""
+                      }`}
+                    >
+                      {nextClass.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
           </div>
         </div>
       </section>

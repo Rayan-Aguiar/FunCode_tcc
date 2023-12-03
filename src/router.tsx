@@ -22,6 +22,7 @@ import EditCourse from "./admin/views/Courses/editCourse";
 import AddCoursePDF from "./admin/views/Courses/addCoursesPDF";
 import QuizAdmin from "./admin/views/Courses/quiz";
 import SignInStudents from "./home/signIn";
+import Quiz from "./student/quiz";
 
 export default function Router(){
     return(
@@ -48,6 +49,7 @@ export default function Router(){
 
                <Route path="/students" element={<StudentsHome />} /> 
                <Route path="/students/courses/:id/class/:idclass" element={<StudentsClasses />}/>
+               <Route path="/students/courses/:id/quiz" element={<Quiz />}/>
                <Route path="/students/edit-perfil" element={<EditPerfil />} /> 
                <Route path="/students/suport" element={<StudentsSuport />} />
             </Routes>
