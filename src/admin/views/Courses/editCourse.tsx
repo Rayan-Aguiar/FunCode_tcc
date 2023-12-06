@@ -8,11 +8,13 @@ import {
   DialogFooter,
   DialogHeader,
   Input,
+  Switch,
   Textarea,
   Typography,
 } from "@material-tailwind/react";
 import { FileImage, FileUp, Plus, Trash } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { API } from "../../../API/api";
 
 export default function EditCourse() {
   const [open, setOpen] = useState(false);
@@ -116,6 +118,22 @@ export default function EditCourse() {
 
   const idDoCurso = primeiroCurso.codigo;
 
+  /* API */
+  const [ course, setCourse ] = useState({});
+
+  useEffect(()=>{
+    const fetchCourse = async() =>{
+      try{
+        const response = await API.get("/courses")
+        setCourse(response.data);
+        console.log(response.data);
+      } catch(error){
+        console.log(error);
+      }
+    }
+    fetchCourse();
+  }, [])
+
   return (
     <div className="bg-gradient-to-br from-gray-100 to-gray-300 w-screen h-fit ">
       <HeaderAdmin />
@@ -127,6 +145,17 @@ export default function EditCourse() {
             <Typography variant="h2">Editar curso</Typography>
           </div>
           <div className="flex items-center gap-2">
+          <Switch
+              id="custom-switch-component"
+              ripple={false}
+              label={`Inativo`}
+              className="h-full w-full checked:bg-roxo"
+              containerProps={{
+                className: "w-11 h-6",
+              }}
+              circleProps={{
+                className: "before:hidden left-0.5 border-none",
+              }} crossOrigin={undefined}          />
             <Link to={`/admin/courses/${idDoCurso}/add-pdf`}>
               <Button color="green" className="flex gap-2 items-center">
                 <FileUp /> Material Complementar

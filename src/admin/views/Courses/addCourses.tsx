@@ -1,16 +1,18 @@
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import HeaderAdmin from "../../components/header";
 import Navigation from "../../components/navegation";
-import { Button, Input, Textarea, Typography } from "@material-tailwind/react";
+import { Button, Input, Spinner, Textarea, Typography } from "@material-tailwind/react";
 import { useState } from "react";
 import { FileImage, Plus, Trash } from "lucide-react";
+import { ToastContainer, toast } from "react-toastify";
+import { API } from "../../../API/api";
 
 export default function AddCourse() {
   const location = useLocation();
   const currentPath = location.pathname;
 
   const adicionarAula = () => {
-    setAulas([...aulas, { nome: "", linkVideo: "", descricao: "" }]);
+    setAulas([...aulas, { name: "", link: "", description: "" }]);
   };
 
   const removerAula = (index: number) => {
@@ -23,7 +25,7 @@ export default function AddCourse() {
   const [imagemPreview, setImagemPreview] = useState<string | undefined>(undefined);
   const [imagemBase64, setImagemBase64] = useState<string | undefined>(undefined);
   const [aulas, setAulas] = useState<Array<any>>([
-    { nome: "", linkVideo: "", descricao: "" },
+    { name: "", link: "", description: "" },
   ]);
   const [formData, setFormData] = useState<any>({
     nomeCursos: "",
@@ -59,21 +61,44 @@ export default function AddCourse() {
     setAulas(newAulas);
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const navigate = useNavigate();
+  const [ loading, setLoading ] = useState(false);
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
-    const dadosCurso: any = {
-      nomeCurso: formData.nomeCursos,
-      imagemBase64,
+  
+    const aulasValidas = aulas.filter(aula => aula.name || aula.link || aula.description);
+    const dadosCurso = {
+      name: formData.nomeCursos,
+      image: imagemBase64,
+      actived: true,
+      classes: aulasValidas.map(aula => ({
+        name: aula.name,
+        description: aula.description,
+        link: aula.link
+      })),
     };
-
-    if (aulas.some(aula => aula.nome || aula.linkVideo || aula.descricao)) {
-      dadosCurso.aulas = aulas.filter(aula => aula.nome || aula.linkVideo || aula.descricao);
+  
+    setLoading(true);
+  
+    try {
+      if (aulasValidas.length > 0) {
+        const response = await API.post("/admin/courses", dadosCurso);
+  
+        console.log("Resposta da API:", response.data);
+        toast.success("Curso cadastrado com sucesso!");
+        navigate("/admin/courses");
+      } else {
+        toast.error("Adicione pelo menos uma aula antes de cadastrar.");
+      }
+    } catch (error) {
+      toast.error("Não foi possível cadastrar o curso");
+      console.error("Erro ao enviar dados:", error);
+    } finally {
+      setLoading(false);
     }
-
-    console.log("Dados do Curso:");
-    console.log(dadosCurso);
   };
+
+  
 
   return (
     <div className="bg-gradient-to-br from-gray-100 to-gray-300 w-screen h-fit ">
@@ -86,7 +111,7 @@ export default function AddCourse() {
         <div className="mt-8 w-full h-fit flex flex-col gap-4">
           <Input
             type="text"
-            name="nomeCursos"
+            name="name"
             label="Nome do Curso"
             crossOrigin={undefined}
             onChange={handleInputChange}
@@ -100,6 +125,7 @@ export default function AddCourse() {
             </label>
             <input
               type="file"
+              name="image"
               id="fileInput"
               onChange={handleFileInputChange}
               accept=".jpg, .jpeg, .png"
@@ -135,23 +161,23 @@ export default function AddCourse() {
                     <Input
                       type="text"
                       label="Nome da aula"
-                      name="nome"
-                      value={aula.nome}
+                      name="name"
+                      value={aula.name}
                       onChange={(e) => handleAulaInputChange(index, e)}
                       crossOrigin={undefined}
                     />
                     <Input
                       type="text"
                       label="Link do video"
-                      name="linkVideo"
-                      value={aula.linkVideo}
+                      name="link"
+                      value={aula.link}
                       onChange={(e) => handleAulaInputChange(index, e)}
                       crossOrigin={undefined}
                     />
                     <Textarea
                       label="Descrição da aula"
-                      name="descricao"
-                      value={aula.descricao}
+                      name="description"
+                      value={aula.description}
                       onChange={(e) => handleAulaInputChange(index, e)}
                     />
                   </div>
@@ -160,13 +186,22 @@ export default function AddCourse() {
               <Button className="bg-roxo text-limeyellow flex gap-2 items-center hover:bg-roxo-normal duration-15" onClick={adicionarAula}><Plus /> Adicionar aula</Button>
             </div>
             <div className="border-t-2 border-zinc-500/20 mt-8 flex justify-center">
-                <Button color="green" type="submit" className="mt-4 text-zinc-800 hover:-translate-y-1 duration-300">Cadastrar Curso</Button>
+                <Button color="green" type="submit" disabled={loading} className="mt-4 text-zinc-800 hover:-translate-y-1 duration-300">
+                  
+                {loading ? (
+                    <Spinner />
+                  ) : (
+                    "Cadastrar curso"
+                  )}
+                
+                </Button>
 
             </div>
             </form>
           </div>
         </div>
       </main>
+      <ToastContainer />
     </div>
   );
 }

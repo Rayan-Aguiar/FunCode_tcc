@@ -114,3 +114,8 @@ export default function SignInStudents() {
     </div>
   );
 }
+
+function handleSubmit() {
+  throw new Error("Function not implemented.");
+}
+
