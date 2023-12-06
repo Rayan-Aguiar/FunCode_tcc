@@ -11,23 +11,25 @@ import {
   DialogFooter,
 } from "@material-tailwind/react";
 import { Eraser, Save, User2 } from "lucide-react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import HeaderAdmin from "../../components/header";
 import { useEffect, useState } from "react";
 import Navigation from "../../components/navegation";
+import { API } from "../../../API/api";
+import { ToastContainer, toast } from "react-toastify";
 
 interface FormData {
-  nomeAluno: string;
-  nomeResponsavel: string;
-  emailAluno: string;
-  emailResponsavel: string;
-  cpf: string;
-  nasc: string;
-  cep: string;
-  cidade: string;
-  end: string;
-  uf: string;
-  bolsa: boolean;
+  name: string;
+  name_responsible: string;
+  email: string;
+  email_responsible: string;
+  cpf_responsible: string;
+  birth: string;
+  zip_code: string;
+  city: string;
+  address: string;
+  state: string;
+  scholarship_holder: boolean;
 }
 
 export default function EditStudent() {
@@ -69,42 +71,42 @@ export default function EditStudent() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const data = [
     {
-      nomeAluno: "João Batista",
-      nomeResponsavel: "Maria João",
-      emailAluno: "teste@teste.com",
-      emailResponsavel: "teste@teste.com",
-      cpf: "123456789-41",
-      nasc: "20/10/2015",
-      cep: "26657-480",
-      cidade: "Rio de Janeiro",
-      end: "Rua sem nome, nº 8",
-      uf: "RJ",
-      bolsa: true,
+      name: "João Batista",
+      name_responsible: "Maria João",
+      email: "teste@teste.com",
+      email_responsible: "teste@teste.com",
+      cpf_responsible: "123456789-41",
+      birth: "20/10/2015",
+      zip_code: "26657-480",
+      city: "Rio de Janeiro",
+      address: "Rua sem nome, nº 8",
+      state: "RJ",
+      scholarship_holder: true,
     },
   ];
 
   const [formData, setFormData] = useState<FormData>({
-    nomeAluno: "",
-    nomeResponsavel: "",
-    emailAluno: "",
-    emailResponsavel: "",
-    cpf: "",
-    nasc: "",
-    cep: "",
-    cidade: "",
-    end: "",
-    uf: "",
-    bolsa: false,
+    name: "",
+    name_responsible: "",
+    email: "",
+    email_responsible: "",
+    cpf_responsible: "",
+    birth: "",
+    zip_code: "",
+    city: "",
+    address: "",
+    state: "",
+    scholarship_holder: false,
   });
 
   useEffect(() => {
     if (data.length > 0) {
       const initialData = data[0];
       setFormData({ ...initialData });
-      if (initialData.bolsa) {
+      if (initialData.scholarship_holder) {
         setFormData((prevFormData) => ({
           ...prevFormData,
-          bolsa: initialData.bolsa,
+          bolsa: initialData.scholarship_holder,
         }));
       }
     }
@@ -134,6 +136,41 @@ export default function EditStudent() {
     setFormData({ ...formData, [name]: value });
   };
 
+  const [studentData, setStudentData] = useState<FormData | null>(null);
+  const { id } = useParams();
+  const navigate = useNavigate();
+  useEffect(() => {
+    async function fetchStudentData() {
+      try {
+        const response = await API.get(`/admin/students/${id}`); 
+
+        if (response.status === 200) {
+          const fetchedStudentData = response.data;
+          setStudentData(fetchedStudentData);
+        }
+      } catch (error) {
+        console.error('Erro ao buscar dados do aluno:', error);
+      }
+    }
+
+    fetchStudentData();
+  }, [id]);
+
+  const handleDelete = async () => {
+    try {
+      const response = await API.delete(`/admin/students/${id}`);
+
+      if (response.status === 200) {
+        console.log("Aluno excluído com sucesso!");
+        toast.success("Aluno excluído com sucesso!");
+        window.location.assign("/admin/students");
+      }
+    } catch (error) {
+      console.error("Erro ao excluir aluno:", error);
+      toast.error("Erro ao excluir aluno");
+    }
+  };
+
   const location = useLocation();
   const currentPath = location.pathname;
   return (
@@ -145,15 +182,16 @@ export default function EditStudent() {
           <div className="bg-white w-full h-60 rounded-lg flex flex-col justify-center items-center gap-4">
             <User2 className="w-24 h-24" />
             <Typography variant="span" className="font-bold">
-              João Batista
+              {studentData?.name}
             </Typography>
           </div>
           <div className="w-full bg-white h-fit p-2 rounded-lg flex justify-center items-center">
             <Checkbox
               label="Conceder bolsa?"
               color="green"
-              checked={formData.bolsa}
+              checked={formData.scholarship_holder}
               onChange={handleCheckboxChange}
+              value={studentData?.scholarship_holder}
               crossOrigin={undefined}
             />
           </div>
@@ -179,9 +217,10 @@ export default function EditStudent() {
               >
                 Cancelar
               </Button>
-              <Button variant="text" color="red" onClick={handleOpen}>
+              <Button variant="text" color="red" onClick={() => { handleDelete(); handleOpen(); }}>
                 Confirmar
               </Button>
+
             </DialogFooter>
           </Dialog>
         </div>
@@ -198,99 +237,99 @@ export default function EditStudent() {
             <div className="mt-4 w-full flex flex-col gap-2">
               <Input
                 label="Nome do Aluno(a)"
-                name="nomeAluno"
+                name="name"
                 required
                 crossOrigin={undefined}
                 onChange={handleInputChange}
-                value={formData.nomeAluno}
+                value={studentData?.name}
               />
               <Input
                 label="Nome do Responsável(a)"
-                name="nomeResponsavel"
+                name="name_responsible"
                 required
                 crossOrigin={undefined}
                 onChange={handleInputChange}
-                value={formData.nomeResponsavel}
+                value={studentData?.name_responsible}
               />
               <div className="flex items-center w-full gap-4">
                 <Input
                   label="Email do Aluno"
-                  name="emailAluno"
+                  name="email"
                   required
                   type="email"
                   crossOrigin={undefined}
                   onChange={handleInputChange}
-                  value={formData.emailAluno}
+                  value={studentData?.email}
                 />
                 <Input
                   label="Email do Responsável"
-                  name="emailResponsavel"
+                  name="email_responsible"
                   required
                   type="email"
                   crossOrigin={undefined}
                   onChange={handleInputChange}
-                  value={formData.emailResponsavel}
+                  value={studentData?.email_responsible}
                 />
               </div>
               <div className="flex items-center w-full gap-4">
                 <Input
-                  label="CPF do responsável"
-                  name="cpf"
+                  label="cpf_responsible do responsável"
+                  name="cpf_responsible"
                   required
                   type="text"
                   crossOrigin={undefined}
                   onChange={handleInputChange}
-                  value={formData.cpf}
+                  value={studentData?.cpf_responsible}
                 />
                 <Input
-                  label="Data de Nasc. do aluno"
-                  name="nasc"
+                  label="Data de birth. do aluno"
+                  name="birth"
                   required
                   type="text"
                   crossOrigin={undefined}
                   onChange={handleInputChange}
-                  value={formData.nasc}
+                  value={studentData?.birth}
                 />
               </div>
               <div className="flex items-center w-full gap-4">
                 <Input
-                  label="CEP"
-                  name="cep"
+                  label="zip_code"
+                  name="zip_code"
                   required
                   type="text"
                   crossOrigin={undefined}
                   onChange={handleInputChange}
-                  value={formData.cep}
+                  value={studentData?.zip_code}
                 />
                 <Input
-                  label="Cidade"
-                  name="cidade"
+                  label="city"
+                  name="city"
                   required
                   type="text"
                   crossOrigin={undefined}
                   onChange={handleInputChange}
-                  value={formData.cidade}
+                  value={studentData?.city}
                 />
               </div>
               <div className="flex items-center w-full gap-4">
                 <div className="w-4/5">
                   <Input
-                    label="Endereço"
-                    name="end"
+                    label="addressereço"
+                    name="address"
                     required
                     type="text"
                     crossOrigin={undefined}
                     onChange={handleInputChange}
-                    value={formData.end}
+                    value={studentData?.address}
                   />
                 </div>
                 <div className="w-1/5">
                   <Select
-                    label="UF"
+                    label="state"
                     onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
                       handleSelectChange(e)
                     }
-                    value={formData.uf}
+                    value={formData.state}
                     animate={{
                       mount: { y: 0 },
                       unmount: { y: 25 },
@@ -316,6 +355,7 @@ export default function EditStudent() {
           </form>
         </div>
       </main>
+      <ToastContainer />
     </div>
   );
 }
