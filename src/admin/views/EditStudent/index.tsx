@@ -9,6 +9,7 @@ import {
   DialogHeader,
   DialogBody,
   DialogFooter,
+  Spinner,
 } from "@material-tailwind/react";
 import { Eraser, Save, User2 } from "lucide-react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
@@ -68,24 +69,32 @@ export default function EditStudent() {
     TO: "Tocantins",
   };
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const data = [
-    {
-      name: "João Batista",
-      name_responsible: "Maria João",
-      email: "teste@teste.com",
-      email_responsible: "teste@teste.com",
-      cpf_responsible: "123456789-41",
-      birth: "20/10/2015",
-      zip_code: "26657-480",
-      city: "Rio de Janeiro",
-      address: "Rua sem nome, nº 8",
-      state: "RJ",
-      scholarship_holder: true,
-    },
-  ];
 
-  const [formData, setFormData] = useState<FormData>({
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target;
+    if (name) {
+      setStudentData({ ...studentData, [name]: value });
+    }
+  };
+
+  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, checked } = e.target;
+    setStudentData({ ...studentData, [name]: checked });
+  };
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    console.table([studentData]);
+  };
+
+  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setStudentData({ ...studentData, [name]: value });
+  };
+
+  const [studentData, setStudentData] = useState<FormData>({ 
     name: "",
     name_responsible: "",
     email: "",
@@ -99,54 +108,17 @@ export default function EditStudent() {
     scholarship_holder: false,
   });
 
-  useEffect(() => {
-    if (data.length > 0) {
-      const initialData = data[0];
-      setFormData({ ...initialData });
-      if (initialData.scholarship_holder) {
-        setFormData((prevFormData) => ({
-          ...prevFormData,
-          bolsa: initialData.scholarship_holder,
-        }));
-      }
-    }
-  }, [data]);
-
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    const { name, value } = e.target;
-    if (name) {
-      setFormData({ ...formData, [name]: value });
-    }
-  };
-
-  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, checked } = e.target;
-    setFormData({ ...formData, [name]: checked });
-  };
-
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    console.table([formData]);
-  };
-
-  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
-
-  const [studentData, setStudentData] = useState<FormData | null>(null);
   const { id } = useParams();
-  const navigate = useNavigate();
+
+  
   useEffect(() => {
     async function fetchStudentData() {
       try {
-        const response = await API.get(`/admin/students/${id}`); 
+        const response = await API.get(`/admin/students/${id}`);
 
         if (response.status === 200) {
           const fetchedStudentData = response.data;
-          setStudentData(fetchedStudentData);
+          setStudentData(fetchedStudentData); 
         }
       } catch (error) {
         console.error('Erro ao buscar dados do aluno:', error);
@@ -155,6 +127,7 @@ export default function EditStudent() {
 
     fetchStudentData();
   }, [id]);
+  
 
   const handleDelete = async () => {
     try {
@@ -168,6 +141,28 @@ export default function EditStudent() {
     } catch (error) {
       console.error("Erro ao excluir aluno:", error);
       toast.error("Erro ao excluir aluno");
+    }
+  };
+
+  const [ loading, setLoading ] = useState(false)
+
+  const handleUpdate = async () => {
+    setLoading(true);
+    try {
+      const response = await API.put(`/admin/students/${id}`, studentData);
+
+      if (response.status === 200) {
+        console.log("Aluno atualizado com sucesso!");
+        toast.success("Aluno atualizado com sucesso!");
+        setTimeout(()=>{
+          window.location.assign('/admin/students')
+        }, 1000)
+      }
+    } catch (error) {
+      console.error("Erro ao atualizar aluno:", error);
+      toast.error("Erro ao atualizar aluno");
+    } finally{
+      setLoading(false);
     }
   };
 
@@ -185,13 +180,13 @@ export default function EditStudent() {
               {studentData?.name}
             </Typography>
           </div>
+          
           <div className="w-full bg-white h-fit p-2 rounded-lg flex justify-center items-center">
             <Checkbox
               label="Conceder bolsa?"
               color="green"
-              checked={formData.scholarship_holder}
-              onChange={handleCheckboxChange}
-              value={studentData?.scholarship_holder}
+              checked={studentData?.scholarship_holder}
+              onChange={(e) => handleCheckboxChange(e)}              
               crossOrigin={undefined}
             />
           </div>
@@ -228,7 +223,10 @@ export default function EditStudent() {
         <div className="bg-white w-4/5 h-fit rounded-lg flex items-center p-4 flex-col">
           <form
             action="POST"
-            onSubmit={handleSubmit}
+            onSubmit={(event) => {
+              handleSubmit(event);
+              handleUpdate(); 
+            }}
             className="flex flex-col justify-center items-center w-full"
           >
             <Typography variant="h4" color="blue-gray">
@@ -273,7 +271,7 @@ export default function EditStudent() {
               </div>
               <div className="flex items-center w-full gap-4">
                 <Input
-                  label="cpf_responsible do responsável"
+                  label="CPF do responsável"
                   name="cpf_responsible"
                   required
                   type="text"
@@ -282,7 +280,7 @@ export default function EditStudent() {
                   value={studentData?.cpf_responsible}
                 />
                 <Input
-                  label="Data de birth. do aluno"
+                  label="Data de nasc. do aluno"
                   name="birth"
                   required
                   type="text"
@@ -293,7 +291,7 @@ export default function EditStudent() {
               </div>
               <div className="flex items-center w-full gap-4">
                 <Input
-                  label="zip_code"
+                  label="CEP"
                   name="zip_code"
                   required
                   type="text"
@@ -302,7 +300,7 @@ export default function EditStudent() {
                   value={studentData?.zip_code}
                 />
                 <Input
-                  label="city"
+                  label="Cidade"
                   name="city"
                   required
                   type="text"
@@ -314,7 +312,7 @@ export default function EditStudent() {
               <div className="flex items-center w-full gap-4">
                 <div className="w-4/5">
                   <Input
-                    label="addressereço"
+                    label="Endereço"
                     name="address"
                     required
                     type="text"
@@ -324,17 +322,17 @@ export default function EditStudent() {
                   />
                 </div>
                 <div className="w-1/5">
-                  <Select
-                    label="state"
-                    onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-                      handleSelectChange(e)
-                    }
-                    value={formData.state}
-                    animate={{
-                      mount: { y: 0 },
-                      unmount: { y: 25 },
-                    }}
-                  >
+                <Select
+                  label="UF"
+                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                    handleSelectChange(e)
+                  }
+                  value={studentData.state} 
+                  animate={{
+                    mount: { y: 0 },
+                    unmount: { y: 25 },
+                  }}
+                >
                     {Object.entries(estados).map(([uf]) => (
                       <Option key={uf} value={uf}>
                         {uf}
@@ -347,10 +345,16 @@ export default function EditStudent() {
                 <Button
                   type="submit"
                   className="bg-limeyellow text-roxo flex gap-2 items-center"
+                  disabled={loading}
                 >
-                  Salvar <Save />
+                  {loading ? (
+                    <Spinner />
+                  ): (
+                    `Salvar`
+                  )}
                 </Button>
               </div>
+              
             </div>
           </form>
         </div>
