@@ -69,7 +69,6 @@ export default function EditStudent() {
     TO: "Tocantins",
   };
 
-
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -94,7 +93,7 @@ export default function EditStudent() {
     setStudentData({ ...studentData, [name]: value });
   };
 
-  const [studentData, setStudentData] = useState<FormData>({ 
+  const [studentData, setStudentData] = useState<FormData>({
     name: "",
     name_responsible: "",
     email: "",
@@ -110,7 +109,6 @@ export default function EditStudent() {
 
   const { id } = useParams();
 
-  
   useEffect(() => {
     async function fetchStudentData() {
       try {
@@ -118,16 +116,15 @@ export default function EditStudent() {
 
         if (response.status === 200) {
           const fetchedStudentData = response.data;
-          setStudentData(fetchedStudentData); 
+          setStudentData(fetchedStudentData);
         }
       } catch (error) {
-        console.error('Erro ao buscar dados do aluno:', error);
+        console.error("Erro ao buscar dados do aluno:", error);
       }
     }
 
     fetchStudentData();
   }, [id]);
-  
 
   const handleDelete = async () => {
     try {
@@ -144,7 +141,7 @@ export default function EditStudent() {
     }
   };
 
-  const [ loading, setLoading ] = useState(false)
+  const [loading, setLoading] = useState(false);
 
   const handleUpdate = async () => {
     setLoading(true);
@@ -154,14 +151,14 @@ export default function EditStudent() {
       if (response.status === 200) {
         console.log("Aluno atualizado com sucesso!");
         toast.success("Aluno atualizado com sucesso!");
-        setTimeout(()=>{
-          window.location.assign('/admin/students')
-        }, 1000)
+        setTimeout(() => {
+          window.location.assign("/admin/students");
+        }, 1000);
       }
     } catch (error) {
       console.error("Erro ao atualizar aluno:", error);
       toast.error("Erro ao atualizar aluno");
-    } finally{
+    } finally {
       setLoading(false);
     }
   };
@@ -180,13 +177,13 @@ export default function EditStudent() {
               {studentData?.name}
             </Typography>
           </div>
-          
+
           <div className="w-full bg-white h-fit p-2 rounded-lg flex justify-center items-center">
             <Checkbox
               label="Conceder bolsa?"
               color="green"
               checked={studentData?.scholarship_holder}
-              onChange={(e) => handleCheckboxChange(e)}              
+              onChange={(e) => handleCheckboxChange(e)}
               crossOrigin={undefined}
             />
           </div>
@@ -212,10 +209,16 @@ export default function EditStudent() {
               >
                 Cancelar
               </Button>
-              <Button variant="text" color="red" onClick={() => { handleDelete(); handleOpen(); }}>
+              <Button
+                variant="text"
+                color="red"
+                onClick={() => {
+                  handleDelete();
+                  handleOpen();
+                }}
+              >
                 Confirmar
               </Button>
-
             </DialogFooter>
           </Dialog>
         </div>
@@ -225,9 +228,8 @@ export default function EditStudent() {
             action="POST"
             onSubmit={(event) => {
               handleSubmit(event);
-              handleUpdate(); 
+              handleUpdate();
             }}
-            className="flex flex-col justify-center items-center w-full"
           >
             <Typography variant="h4" color="blue-gray">
               Editar aluno
@@ -322,17 +324,17 @@ export default function EditStudent() {
                   />
                 </div>
                 <div className="w-1/5">
-                <Select
-                  label="UF"
-                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-                    handleSelectChange(e)
-                  }
-                  value={studentData.state} 
-                  animate={{
-                    mount: { y: 0 },
-                    unmount: { y: 25 },
-                  }}
-                >
+                  <Select
+                    label="UF"
+                    onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                      handleSelectChange(e)
+                    }
+                    value={studentData.state}
+                    animate={{
+                      mount: { y: 0 },
+                      unmount: { y: 25 },
+                    }}
+                  >
                     {Object.entries(estados).map(([uf]) => (
                       <Option key={uf} value={uf}>
                         {uf}
@@ -347,14 +349,9 @@ export default function EditStudent() {
                   className="bg-limeyellow text-roxo flex gap-2 items-center"
                   disabled={loading}
                 >
-                  {loading ? (
-                    <Spinner />
-                  ): (
-                    `Salvar`
-                  )}
+                  {loading ? <Spinner /> : `Salvar`}
                 </Button>
               </div>
-              
             </div>
           </form>
         </div>

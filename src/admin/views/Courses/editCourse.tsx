@@ -1,4 +1,4 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import HeaderAdmin from "../../components/header";
 import Navigation from "../../components/navegation";
 import {
@@ -8,6 +8,7 @@ import {
   DialogFooter,
   DialogHeader,
   Input,
+  Spinner,
   Switch,
   Textarea,
   Typography,
@@ -15,12 +16,28 @@ import {
 import { FileImage, FileUp, Plus, Trash } from "lucide-react";
 import { useEffect, useState } from "react";
 import { API } from "../../../API/api";
+import { ToastContainer, toast } from "react-toastify";
+
+
+interface formData {
+  name: string;
+  image: string;
+  actived: boolean;
+  classes?: [{
+    name: string,
+    description: string,
+    link: string,
+  }]
+}
 
 export default function EditCourse() {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(!open);
   const location = useLocation();
   const currentPath = location.pathname;
+
+
+
   const adicionarAula = () => {
     setAulas([...aulas, { nome: "", linkVideo: "", descricao: "" }]);
   };
@@ -41,7 +58,7 @@ export default function EditCourse() {
     { nome: "", linkVideo: "", descricao: "" },
   ]);
   const [formData, setFormData] = useState<any>({
-    nomeCursos: "",
+    name: "",
   });
 
   const handleFileInputChange = (
@@ -76,63 +93,92 @@ export default function EditCourse() {
     setAulas(newAulas);
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
+    
     const dadosCurso: any = {
-      nomeCurso: formData.nomeCursos,
-      imagemBase64,
+      name: formData.name,
+      image: imagemBase64,
+      classes: aulas,
     };
 
-    if (aulas.some((aula) => aula.nome || aula.linkVideo || aula.descricao)) {
-      dadosCurso.aulas = aulas.filter(
-        (aula) => aula.nome || aula.linkVideo || aula.descricao
-      );
+    try {
+      
+      const response = await API.put(`/admin/courses/${id}`, dadosCurso);
+      if (response.status === 200) {
+        toast.success("Curso atualizado com sucesso!");
+      }
+    } catch (error) {
+      toast.error("Erro ao atualizar o curso");
     }
-
-    console.log("Dados do Curso:");
-    console.log(dadosCurso);
   };
-  const data: TableData[] = [
-    {
-      codigo: 1,
-      nomeCurso: "HTML Básico",
-      tipoCurso: "PDF",
-      status: "Ativo",
-    },
-    {
-      codigo: 2,
-      nomeCurso: "CSS Básico",
-      tipoCurso: "Video",
-      status: "Inativo",
-    },
-    {
-      codigo: 3,
-      nomeCurso: "JavaScript Básico",
-      tipoCurso: "PDF",
-      status: "Ativo",
-    },
-  ];
 
-  const primeiroCurso = data[0];
-
-  const idDoCurso = primeiroCurso.codigo;
 
   /* API */
-  const [ course, setCourse ] = useState({});
+  const { id } = useParams();
 
-  useEffect(()=>{
-    const fetchCourse = async() =>{
-      try{
-        const response = await API.get("/courses")
-        setCourse(response.data);
-        console.log(response.data);
-      } catch(error){
-        console.log(error);
+  const [course, setCourse] = useState<formData>({
+    name: "",
+    image: "",
+    actived: true,
+    classes:[{
+      name: "",
+      description: "",
+      link: "",
+    }]
+  });
+const [courseImage, setCourseImage] = useState<string | undefined>(undefined);
+
+  useEffect(() => {
+    const fetchCourse = async () => {
+      try {
+        const response = await API.get(`/admin/courses/${id}`);
+        if( response.status === 200){
+          const fetchedCourseData = response.data;
+          setCourse(fetchedCourseData);
+          setCourseImage(fetchedCourseData.image);
+          setImagemPreview(fetchedCourseData.image);
+        }
+      } catch (error) {
+        console.log("Erro ao buscar curso:", error);
       }
-    }
+    };
     fetchCourse();
-  }, [])
+  }, [id]);
+  const [loading, setLoading] = useState(false);
+  const handleUpdate = async ()=>{
+    setLoading(true);
+    try {
+      const response = await API.put(`/admin/courses/${id}`, courseData);
+
+      if (response.status === 200){
+        toast.success("Curso atualizado com sucesso")
+        setTimeout(()=>{
+          window.location.assign("/admin/courses")
+        }, 1000)
+      }
+    } catch(error){
+      toast.error("erro ao atualizar o curso");
+    } finally{
+      setLoading(false);
+    }
+  }
+
+  const handleDelete = async () => {
+    try {
+      const response = await API.delete(`/admin/courses/${id}`);
+      if (response.status === 204) {
+        toast.success("Curso excluído com sucesso!");
+        setTimeout(() => {
+          window.location.assign("/admin/courses");
+        }, 1000);
+      }
+    } catch (error) {
+      toast.error("Não foi possível excluir o curso");
+    }
+  };
+
 
   return (
     <div className="bg-gradient-to-br from-gray-100 to-gray-300 w-screen h-fit ">
@@ -156,12 +202,12 @@ export default function EditCourse() {
               circleProps={{
                 className: "before:hidden left-0.5 border-none",
               }} crossOrigin={undefined}          />
-            <Link to={`/admin/courses/${idDoCurso}/add-pdf`}>
+            <Link to={`/admin/courses/${id}/add-pdf`}>
               <Button color="green" className="flex gap-2 items-center">
                 <FileUp /> Material Complementar
               </Button>
             </Link>
-            <Link to={`/admin/courses/${idDoCurso}/quiz`}>
+            <Link to={`/admin/courses/${id}/quiz`}>
               <Button color="green" className="flex gap-2 items-center">
                 <FileUp /> Questionário
               </Button>
@@ -188,7 +234,10 @@ export default function EditCourse() {
                 >
                   Cancelar
                 </Button>
-                <Button variant="text" color="red" onClick={handleOpen}>
+                <Button variant="text" color="red" onClick={() => {
+                  handleDelete();
+                  handleOpen();
+                }}>
                   Confirmar
                 </Button>
               </DialogFooter>
@@ -197,10 +246,14 @@ export default function EditCourse() {
         </div>
 
         <div className="mt-8 w-full h-fit flex flex-col gap-4">
+          <form action="POST" onSubmit={(event) =>{handleSubmit(event);
+            handleUpdade();
+          }}>
           <Input
             type="text"
-            name="nomeCursos"
+            name="name"
             label="Nome do Curso"
+            value={course?.name}
             crossOrigin={undefined}
             onChange={handleInputChange}
           />
@@ -217,6 +270,7 @@ export default function EditCourse() {
               onChange={handleFileInputChange}
               accept=".jpg, .jpeg, .png"
               multiple
+              name="image"
               className="hidden"
             />
             <div className="w-80 h-52 rounded-md border-4 border-stone-500 border-dashed p-4 flex justify-center items-center overflow-hidden object-cover object-center">
@@ -233,7 +287,7 @@ export default function EditCourse() {
           </div>
           <div className="border-t-2 border-zinc-500/20">
             <Typography variant="h3">Aulas</Typography>
-            <form onSubmit={handleSubmit}>
+            
               <div className="flex flex-col items-center">
                 {aulas.map((aula, index) => (
                   <div className="w-full mt-4 animate-slide-down" key={index}>
@@ -248,23 +302,23 @@ export default function EditCourse() {
                       <Input
                         type="text"
                         label="Nome da aula"
-                        name="nome"
-                        value={aula.nome}
+                        name="name"
+                        value={course?.classes[0]?.name}
                         onChange={(e) => handleAulaInputChange(index, e)}
                         crossOrigin={undefined}
                       />
                       <Input
                         type="text"
                         label="Link do video"
-                        name="linkVideo"
-                        value={aula.linkVideo}
+                        name="link"
+                        value={course?.classes[0]?.link}
                         onChange={(e) => handleAulaInputChange(index, e)}
                         crossOrigin={undefined}
                       />
                       <Textarea
                         label="Descrição da aula"
-                        name="descricao"
-                        value={aula.descricao}
+                        name="description"
+                        value={course?.classes[0]?.description}
                         onChange={(e) => handleAulaInputChange(index, e)}
                       />
                     </div>
@@ -281,15 +335,18 @@ export default function EditCourse() {
                 <Button
                   color="green"
                   type="submit"
+                  disabled={loading}
                   className="mt-4 text-zinc-800 hover:-translate-y-1 duration-300"
                 >
-                  Salvar
+                  {loading ? <Spinner /> : `Salvar`}
                 </Button>
               </div>
-            </form>
+            
           </div>
+          </form>
         </div>
       </main>
+      <ToastContainer />
     </div>
   );
 }

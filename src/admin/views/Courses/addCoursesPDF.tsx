@@ -1,28 +1,71 @@
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import HeaderAdmin from "../../components/header";
 import Navigation from "../../components/navegation";
-import { Button,   Typography } from "@material-tailwind/react";
+import { Button, Spinner, Typography } from "@material-tailwind/react";
+import { API } from "../../../API/api";
+import { ToastContainer, toast } from "react-toastify";
 import { useState } from "react";
 
 export default function AddCoursePDF() {
   const location = useLocation();
   const currentPath = location.pathname;
+  const { id } = useParams();
+
+  const [loading, setLoading] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   const handleFileInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-
     if (file) {
-      const reader = new FileReader();
-
-      reader.onload = () => {
-        const base64Data = reader.result as string;
-        console.log('Arquivo convertido para base64:', base64Data);
-      };
-
-      reader.readAsDataURL(file);
+      setSelectedFile(file);
     }
   };
 
+  const handleUpload = async () => {
+    if (!selectedFile) {
+      toast.error("Selecione um arquivo PDF para enviar.");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const reader = new FileReader();
+
+      reader.onload = async () => {
+        const base64String = reader.result?.toString().split(",")[1]; // Remove data URL prefix
+
+        if (base64String) {
+          const dataToSend = {
+            file: base64String,
+          };
+
+          try {
+            const response = await API.post(`/admin/courses/${id}/material`, dataToSend);
+
+            console.log("Resposta da API:", response.data);
+
+            toast.success("PDF enviado com sucesso!");
+
+            setTimeout(()=>{
+              window.location.assign("/admin/courses")
+            },1000)
+          } catch (error) {
+            console.error("Erro ao enviar o PDF:", error);
+            toast.error("Erro ao enviar o PDF. Por favor, tente novamente.");
+          } finally {
+            setLoading(false);
+          }
+        }
+      };
+
+      reader.readAsDataURL(selectedFile);
+    } catch (error) {
+      console.error("Erro ao ler o arquivo:", error);
+      toast.error("Erro ao processar o arquivo. Por favor, tente novamente.");
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="bg-gradient-to-br from-gray-100 to-gray-300 w-screen min-h-screen h-fit ">
@@ -42,25 +85,29 @@ export default function AddCoursePDF() {
             </label>
             <input
               type="file"
-              id="fileInput"              
+              id="fileInput"
               accept=".pdf"
               multiple
               className="hidden"
-              onChange={handleFileInputChange} 
-            />           
+              onChange={handleFileInputChange}
+            />
           </div>
 
           <div className="border-t-2 border-zinc-500/20 mt-8 flex justify-center">
             <Button
               color="green"
               type="submit"
+              onClick={handleUpload}
+              disabled={loading}
               className="mt-4 text-zinc-800 hover:-translate-y-1 duration-300"
             >
-              Enviar Material
+              {loading ? <Spinner /> : "Enviar material"}
             </Button>
           </div>
         </div>
       </main>
+
+      <ToastContainer />
     </div>
   );
 }
