@@ -7,6 +7,15 @@ import Navigation from "../../components/navegation";
 import { useEffect, useState } from "react";
 import { API } from "../../../API/api";
 
+
+const formatToCurrency = (value) => {
+  const floatValue = parseFloat(value);
+  if (!isNaN(floatValue)) {
+    return `R$ ${floatValue.toFixed(2).replace('.', ',')}`;
+  }
+  return 'R$ 0,00';
+};
+
 export default function Dashboard() {
   const location = useLocation();
   const currentPath = location.pathname;
@@ -25,6 +34,13 @@ export default function Dashboard() {
 
     fetchData();
   }, []);
+
+  const studentsPriceInBRL = () => {
+    const students = data.students || 0;
+    const studentsInBRL = students * 200;
+    return formatToCurrency(studentsInBRL);
+  };
+
 
   return (
     <div className="bg-gradient-to-br from-gray-100 to-gray-300 w-screen min-h-screen h-fit ">
@@ -53,7 +69,7 @@ export default function Dashboard() {
           <CardAdmin
             icon={Landmark}
             title="Faturamento Mensal"
-            description="R$ 800,00"
+            description={studentsPriceInBRL()}
           />
         </div>
       </main>

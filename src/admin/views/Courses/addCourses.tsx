@@ -51,6 +51,8 @@ export default function AddCourse() {
     setFormData({ ...formData, [name]: value });
   };
 
+
+  
   const handleAulaInputChange = (
     index: number,
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -68,7 +70,7 @@ export default function AddCourse() {
   
     const aulasValidas = aulas.filter(aula => aula.name || aula.link || aula.description);
     const dadosCurso = {
-      name: formData.nomeCursos,
+      name: formData.name,
       image: imagemBase64,
       actived: true,
       classes: aulasValidas.map(aula => ({

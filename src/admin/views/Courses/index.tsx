@@ -21,6 +21,9 @@ export default function CoursesAdmin() {
   interface TableProps {
     data: TableData[];
   }
+  const getStatusText = (isActive: boolean) => {
+    return isActive ? 'Ativo' : 'Inativo';
+  };
 
   const Table: React.FC<TableProps> = ({ data }) => {
     return (
@@ -38,7 +41,7 @@ export default function CoursesAdmin() {
             <tr key={index} className="border-b text-center">
               <td className="p-1">{item.id}</td>
               <td className="p-1">{item.name}</td>
-              <td className="p-1">{item.actived}</td>
+              <td className="p-1">{getStatusText(item.actived)}</td>
               <td className="p-1 flex justify-center">
                 <Link to={`/admin/courses/edit/${item.id}`}>
                   <Button

@@ -37,6 +37,9 @@ export default function SuportDetails() {
       );
       console.log("Status enviado:", formData);
       toast.success("Status Atualizado com sucesso")
+      setTimeout(() => {
+        window.location.assign("/admin/suport")
+      }, 1000);
     } catch (error) {
       console.error("Erro ao salvar:", error);
       toast.error("Erro ao atualizar status")
@@ -54,6 +57,7 @@ export default function SuportDetails() {
           const data = response.data; 
           console.log(response.data)
           setFormData(response.data);
+
         
       } catch (error) {
         console.error("Erro ao buscar detalhes de suporte:", error);

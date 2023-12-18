@@ -94,7 +94,11 @@ export default function QuizAdmin() {
           Criar Questionário
         </Typography>
 
-        <div className="flex flex-col w-3/5 gap-2">{renderizarQuestoes()}</div>
+        <div className="flex flex-col w-3/5 gap-2">
+          
+          {renderizarQuestoes()}
+          
+          </div>
         <div className=" flex justify-center items-center mt-8">
           <Button
             className="mt-2 flex gap-2 items-center"

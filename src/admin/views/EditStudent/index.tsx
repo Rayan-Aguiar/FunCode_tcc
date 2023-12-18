@@ -130,10 +130,13 @@ export default function EditStudent() {
     try {
       const response = await API.delete(`/admin/students/${id}`);
 
-      if (response.status === 200) {
+      if (response.status === 204) {
         console.log("Aluno excluído com sucesso!");
         toast.success("Aluno excluído com sucesso!");
-        window.location.assign("/admin/students");
+
+        setTimeout(() => {
+          window.location.assign("/admin/students");          
+        }, 1000);
       }
     } catch (error) {
       console.error("Erro ao excluir aluno:", error);
@@ -226,6 +229,7 @@ export default function EditStudent() {
         <div className="bg-white w-4/5 h-fit rounded-lg flex items-center p-4 flex-col">
           <form
             action="POST"
+            className="w-full"
             onSubmit={(event) => {
               handleSubmit(event);
               handleUpdate();
