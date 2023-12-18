@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import Kid1 from "../../assets/kid 1.png";
 
 export default function FirstPage() {
@@ -12,9 +13,11 @@ export default function FirstPage() {
           Inicie a Jornada Tecnológica de seu Filho(a) Hoje Mesmo: Construa o
           Futuro!
         </p>
-        <button className="bg-limeyellow p-2 rounded-full text-roxo w-60">
-          Saiba mais!
-        </button>
+        <Link to ="/signup">
+          <button className="bg-limeyellow p-2 rounded-full text-roxo w-60">
+            Saiba mais!
+          </button>
+        </Link>
       </div>
 
       <div className="md:block hidden">

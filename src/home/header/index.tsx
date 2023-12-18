@@ -16,7 +16,7 @@ export default function Header() {
           <li className="font-bold hover:bg-limeyellow hover:text-roxo duration-150 cursor-pointer uppercase border border-limeyellow p-2 rounded-full">
             <Link to="/signup">Cadastrar</Link></li>
           <li className="font-bold hover:bg-limeyellow hover:text-roxo duration-150 cursor-pointer uppercase border border-limeyellow p-2 rounded-full">
-            <Link to="../students">Entrar</Link></li>
+            <Link to="/signin">Entrar</Link></li>
         </ul>
       </div>
     </div>

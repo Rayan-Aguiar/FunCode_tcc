@@ -1,200 +1,239 @@
-import { Button, Checkbox, Input, Select, Typography, Option, Dialog, DialogHeader, DialogBody, DialogFooter } from "@material-tailwind/react";
 import {
-  Coins,
-  Eraser,
-  GraduationCap,
-  HelpCircle,
-  PieChart,
-  Save,
-  User2,
-} from "lucide-react";
-import { Link } from "react-router-dom";
+  Button,
+  Checkbox,
+  Input,
+  Select,
+  Typography,
+  Option,
+  Dialog,
+  DialogHeader,
+  DialogBody,
+  DialogFooter,
+  Spinner,
+} from "@material-tailwind/react";
+import { Eraser, Save, User2 } from "lucide-react";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import HeaderAdmin from "../../components/header";
 import { useEffect, useState } from "react";
+import Navigation from "../../components/navegation";
+import { API } from "../../../API/api";
+import { ToastContainer, toast } from "react-toastify";
 
 interface FormData {
-    nomeAluno: string;
-    nomeResponsavel: string;
-    emailAluno: string;
-    emailResponsavel: string;
-    cpf: string;
-    nasc: string;
-    cep: string;
-    cidade: string;
-    end: string;
-    uf: string;
-    bolsa: boolean;
-  }
-  
-  export default function EditStudent() {
-    const [open, setOpen] = useState(false);
- 
-    const handleOpen = () => setOpen(!open);
+  name: string;
+  name_responsible: string;
+  email: string;
+  email_responsible: string;
+  cpf_responsible: string;
+  birth: string;
+  zip_code: string;
+  city: string;
+  address: string;
+  state: string;
+  scholarship_holder: boolean;
+}
 
-    const estados = {
-      "": "",
-      AC: "Acre",
-      AL: "Alagoas",
-      AM: "Amazonas",
-      AP: "Amapá",
-      BA: "Bahia",
-      CE: "Ceará",
-      DF: "Distrito Federal",
-      ES: "Espírito Santo",
-      GO: "Goiás",
-      MA: "Maranhão",
-      MG: "Minas Gerais",
-      MS: "Mato Grosso do Sul",
-      MT: "Mato Grosso",
-      PA: "Pará",
-      PB: "Paraíba",
-      PE: "Pernambuco",
-      PI: "Piauí",
-      PR: "Paraná",
-      RJ: "Rio de Janeiro",
-      RN: "Rio Grande do Norte",
-      RO: "Rondônia",
-      RR: "Roraima",
-      RS: "Rio Grande do Sul",
-      SC: "Santa Catarina",
-      SE: "Sergipe",
-      SP: "São Paulo",
-      TO: "Tocantins",
-    };
+export default function EditStudent() {
+  const [open, setOpen] = useState(false);
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    const data = [
-      {
-        nomeAluno: "João Batista",
-        nomeResponsavel: "Maria João",
-        emailAluno: "teste@teste.com",
-        emailResponsavel: "teste@teste.com",
-        cpf: "123456789-41",
-        nasc: "20/10/2015",
-        cep: "26657-480",
-        cidade: "Rio de Janeiro",
-        end: "Rua sem nome, nº 8",
-        uf: "RJ",
-        bolsa: true,
-      },
-      
-    ];
+  const handleOpen = () => setOpen(!open);
 
-    const [formData, setFormData] = useState<FormData>({
-      nomeAluno: "",
-      nomeResponsavel: "",
-      emailAluno: "",
-      emailResponsavel: "",
-      cpf: "",
-      nasc: "",
-      cep: "",
-      cidade: "",
-      end: "",
-      uf: "",
-      bolsa: false,
-    });
-  
-    useEffect(() => {
-      if (data.length > 0) {
-        const initialData = data[0];
-        setFormData({ ...initialData });
-        if (initialData.bolsa) {
-          setFormData((prevFormData) => ({
-            ...prevFormData,
-            bolsa: initialData.bolsa,
-          }));
+  const estados = {
+    "": "",
+    AC: "Acre",
+    AL: "Alagoas",
+    AM: "Amazonas",
+    AP: "Amapá",
+    BA: "Bahia",
+    CE: "Ceará",
+    DF: "Distrito Federal",
+    ES: "Espírito Santo",
+    GO: "Goiás",
+    MA: "Maranhão",
+    MG: "Minas Gerais",
+    MS: "Mato Grosso do Sul",
+    MT: "Mato Grosso",
+    PA: "Pará",
+    PB: "Paraíba",
+    PE: "Pernambuco",
+    PI: "Piauí",
+    PR: "Paraná",
+    RJ: "Rio de Janeiro",
+    RN: "Rio Grande do Norte",
+    RO: "Rondônia",
+    RR: "Roraima",
+    RS: "Rio Grande do Sul",
+    SC: "Santa Catarina",
+    SE: "Sergipe",
+    SP: "São Paulo",
+    TO: "Tocantins",
+  };
+
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target;
+    if (name) {
+      setStudentData({ ...studentData, [name]: value });
+    }
+  };
+
+  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, checked } = e.target;
+    setStudentData({ ...studentData, [name]: checked });
+  };
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    console.table([studentData]);
+  };
+
+  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setStudentData({ ...studentData, [name]: value });
+  };
+
+  const [studentData, setStudentData] = useState<FormData>({
+    name: "",
+    name_responsible: "",
+    email: "",
+    email_responsible: "",
+    cpf_responsible: "",
+    birth: "",
+    zip_code: "",
+    city: "",
+    address: "",
+    state: "",
+    scholarship_holder: false,
+  });
+
+  const { id } = useParams();
+
+  useEffect(() => {
+    async function fetchStudentData() {
+      try {
+        const response = await API.get(`/admin/students/${id}`);
+
+        if (response.status === 200) {
+          const fetchedStudentData = response.data;
+          setStudentData(fetchedStudentData);
         }
+      } catch (error) {
+        console.error("Erro ao buscar dados do aluno:", error);
       }
-    }, [data]);
-  
-    const handleInputChange = (
-      e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-    ) => {
-      const { name, value } = e.target;
-      if (name) {
-        setFormData({ ...formData, [name]: value });
+    }
+
+    fetchStudentData();
+  }, [id]);
+
+  const handleDelete = async () => {
+    try {
+      const response = await API.delete(`/admin/students/${id}`);
+
+      if (response.status === 204) {
+        console.log("Aluno excluído com sucesso!");
+        toast.success("Aluno excluído com sucesso!");
+
+        setTimeout(() => {
+          window.location.assign("/admin/students");          
+        }, 1000);
       }
-    };
-  
-    const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const { name, checked } = e.target;
-      setFormData({ ...formData, [name]: checked });
-    };
-  
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-      event.preventDefault();
-      console.table([formData]);
-    };
-  
-    const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-      const { name, value } = e.target;
-      setFormData({ ...formData, [name]: value });
-    };
+    } catch (error) {
+      console.error("Erro ao excluir aluno:", error);
+      toast.error("Erro ao excluir aluno");
+    }
+  };
+
+  const [loading, setLoading] = useState(false);
+
+  const handleUpdate = async () => {
+    setLoading(true);
+    try {
+      const response = await API.put(`/admin/students/${id}`, studentData);
+
+      if (response.status === 200) {
+        console.log("Aluno atualizado com sucesso!");
+        toast.success("Aluno atualizado com sucesso!");
+        setTimeout(() => {
+          window.location.assign("/admin/students");
+        }, 1000);
+      }
+    } catch (error) {
+      console.error("Erro ao atualizar aluno:", error);
+      toast.error("Erro ao atualizar aluno");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const location = useLocation();
+  const currentPath = location.pathname;
   return (
     <div className="bg-gradient-to-br from-gray-100 to-gray-300 w-screen h-screen ">
       <HeaderAdmin />
-      <nav className="w-full h-10 bg-roxo flex items-center px-10 gap-8">
-        <Link to="/admin/dashboard">
-          <Typography className="text-zinc-50 font-semibold w-fit h-full flex items-center gap-2 p-2">
-            <PieChart className="text-limeyellow" /> Dashboard
-          </Typography>
-        </Link>
-        <Link to="/admin/students">
-          <Typography className="text-zinc-50 font-semibold w-fit h-full flex bg-roxo-light items-center gap-2 p-2">
-            <GraduationCap className="text-limeyellow" /> Alunos
-          </Typography>
-        </Link>
-        <Link to="/admin/financial">
-          <Typography className="text-zinc-50 font-semibold w-fit h-full flex  items-center gap-2 p-2">
-            <Coins className="text-limeyellow" /> Financeiro
-          </Typography>
-        </Link>
-        <Link to="/admin/courses">
-          <Typography className="text-zinc-50 font-semibold w-fit h-full flex items-center gap-2 p-2">
-            <Coins className="text-limeyellow" /> Cursos
-          </Typography>
-        </Link>
-        <Link to="/admin/suport">
-          <Typography className="text-zinc-50 font-semibold w-fit h-full  flex items-center gap-2 p-2">
-            <HelpCircle className="text-limeyellow" /> Suporte
-          </Typography>
-        </Link>
-      </nav>
+      <Navigation currentPath={currentPath} />
       <main className="p-8 flex justify-between w-full gap-4">
         <div className="w-1/5 flex flex-col gap-4">
           <div className="bg-white w-full h-60 rounded-lg flex flex-col justify-center items-center gap-4">
             <User2 className="w-24 h-24" />
             <Typography variant="span" className="font-bold">
-              João Batista
+              {studentData?.name}
             </Typography>
           </div>
+
           <div className="w-full bg-white h-fit p-2 rounded-lg flex justify-center items-center">
-            <Checkbox label="Conceder bolsa?" color="green" checked={formData.bolsa} onChange={handleCheckboxChange} crossOrigin={undefined} />
+            <Checkbox
+              label="Conceder bolsa?"
+              color="green"
+              checked={studentData?.scholarship_holder}
+              onChange={(e) => handleCheckboxChange(e)}
+              crossOrigin={undefined}
+            />
           </div>
-          <Button color="red" className="w-full h-fit flex items-center gap-2 justify-center" onClick={handleOpen}><Eraser/> Excluir aluno?</Button>
+          <Button
+            color="red"
+            className="w-full h-fit flex items-center gap-2 justify-center"
+            onClick={handleOpen}
+          >
+            <Eraser /> Excluir aluno?
+          </Button>
 
           <Dialog open={open} handler={handleOpen}>
             <DialogHeader>Tem certeza?</DialogHeader>
-            <DialogBody>Após a exclusão, não será possivel recuperar os dados do aluno.</DialogBody>
+            <DialogBody>
+              Após a exclusão, não será possivel recuperar os dados do aluno.
+            </DialogBody>
             <DialogFooter>
               <Button
                 variant="text"
                 color="green"
                 onClick={handleOpen}
                 className="mr-1"
-              >Cancelar</Button>
+              >
+                Cancelar
+              </Button>
               <Button
-                variant="text" color="red" onClick={handleOpen}
-              >Confirmar</Button>
+                variant="text"
+                color="red"
+                onClick={() => {
+                  handleDelete();
+                  handleOpen();
+                }}
+              >
+                Confirmar
+              </Button>
             </DialogFooter>
           </Dialog>
         </div>
 
         <div className="bg-white w-4/5 h-fit rounded-lg flex items-center p-4 flex-col">
-        <form
+          <form
             action="POST"
-            onSubmit={handleSubmit}
-            className="flex flex-col justify-center items-center w-full"
+            className="w-full"
+            onSubmit={(event) => {
+              handleSubmit(event);
+              handleUpdate();
+            }}
           >
             <Typography variant="h4" color="blue-gray">
               Editar aluno
@@ -202,103 +241,103 @@ interface FormData {
             <div className="mt-4 w-full flex flex-col gap-2">
               <Input
                 label="Nome do Aluno(a)"
-                name="nomeAluno"
+                name="name"
                 required
                 crossOrigin={undefined}
                 onChange={handleInputChange}
-                value={formData.nomeAluno}
+                value={studentData?.name}
               />
               <Input
                 label="Nome do Responsável(a)"
-                name="nomeResponsavel"
+                name="name_responsible"
                 required
                 crossOrigin={undefined}
                 onChange={handleInputChange}
-                value={formData.nomeResponsavel}
+                value={studentData?.name_responsible}
               />
               <div className="flex items-center w-full gap-4">
                 <Input
                   label="Email do Aluno"
-                  name="emailAluno"
+                  name="email"
                   required
                   type="email"
                   crossOrigin={undefined}
                   onChange={handleInputChange}
-                  value={formData.emailAluno}
+                  value={studentData?.email}
                 />
                 <Input
                   label="Email do Responsável"
-                  name="emailResponsavel"
+                  name="email_responsible"
                   required
                   type="email"
                   crossOrigin={undefined}
                   onChange={handleInputChange}
-                  value={formData.emailResponsavel}
+                  value={studentData?.email_responsible}
                 />
               </div>
               <div className="flex items-center w-full gap-4">
                 <Input
                   label="CPF do responsável"
-                  name="cpf"
+                  name="cpf_responsible"
                   required
                   type="text"
                   crossOrigin={undefined}
                   onChange={handleInputChange}
-                  value={formData.cpf}
+                  value={studentData?.cpf_responsible}
                 />
                 <Input
-                  label="Data de Nasc. do aluno"
-                  name="nasc"
+                  label="Data de nasc. do aluno"
+                  name="birth"
                   required
                   type="text"
                   crossOrigin={undefined}
                   onChange={handleInputChange}
-                  value={formData.nasc}
+                  value={studentData?.birth}
                 />
               </div>
               <div className="flex items-center w-full gap-4">
                 <Input
                   label="CEP"
-                  name="cep"
+                  name="zip_code"
                   required
                   type="text"
                   crossOrigin={undefined}
                   onChange={handleInputChange}
-                  value={formData.cep}
+                  value={studentData?.zip_code}
                 />
                 <Input
                   label="Cidade"
-                  name="cidade"
+                  name="city"
                   required
                   type="text"
                   crossOrigin={undefined}
                   onChange={handleInputChange}
-                  value={formData.cidade}
+                  value={studentData?.city}
                 />
               </div>
               <div className="flex items-center w-full gap-4">
                 <div className="w-4/5">
                   <Input
                     label="Endereço"
-                    name="end"
+                    name="address"
                     required
                     type="text"
                     crossOrigin={undefined}
                     onChange={handleInputChange}
-                    value={formData.end}
+                    value={studentData?.address}
                   />
                 </div>
                 <div className="w-1/5">
                   <Select
                     label="UF"
                     onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-                        handleSelectChange(e)
-                      }
-                      value={formData.uf}
-                      animate={{
-                        mount: { y: 0 },
-                        unmount: { y: 25 },
-                      }}
+                      handleSelectChange(e)
+                    }
+                    value={studentData.state}
+                    animate={{
+                      mount: { y: 0 },
+                      unmount: { y: 25 },
+                    }}
                   >
                     {Object.entries(estados).map(([uf]) => (
                       <Option key={uf} value={uf}>
@@ -312,14 +351,16 @@ interface FormData {
                 <Button
                   type="submit"
                   className="bg-limeyellow text-roxo flex gap-2 items-center"
+                  disabled={loading}
                 >
-                  Salvar <Save />
+                  {loading ? <Spinner /> : `Salvar`}
                 </Button>
               </div>
             </div>
           </form>
         </div>
       </main>
+      <ToastContainer />
     </div>
   );
 }

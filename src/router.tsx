@@ -17,6 +17,12 @@ import EditStudent from "./admin/views/EditStudent";
 import SuportAdmin from "./admin/views/Suport";
 import SuportDetails from "./admin/views/Suport/details";
 import CoursesAdmin from "./admin/views/Courses";
+import AddCourse from "./admin/views/Courses/addCourses";
+import EditCourse from "./admin/views/Courses/editCourse";
+import AddCoursePDF from "./admin/views/Courses/addCoursesPDF";
+import QuizAdmin from "./admin/views/Courses/quiz";
+import SignInStudents from "./home/signIn";
+import Quiz from "./student/quiz";
 
 export default function Router(){
     return(
@@ -24,6 +30,7 @@ export default function Router(){
             <Routes>
                 <Route path="/" element={<Home />}/>
                 <Route path="/signup" element={<SignUp />}/>
+                <Route path="/signin"element={<SignInStudents />}/>
 
                 <Route path="/admin" element={<SignIn />}/>
                 <Route path="/admin/dashboard" element={<Dashboard />} />
@@ -32,12 +39,17 @@ export default function Router(){
                 <Route path="/admin/students/edit/:id" element={<EditStudent />}/>
                 <Route path="/admin/financial" element={ <FinancialAdmin />} />
                 <Route path="/admin/courses" element={<CoursesAdmin />}/>
+                <Route path="/admin/courses/add" element={<AddCourse />}/>
+                <Route path="/admin/courses/:id/add-pdf" element={<AddCoursePDF />}/>
+                <Route path="/admin/courses/:id/quiz" element={<QuizAdmin />}/>
+                <Route path="/admin/courses/edit/:id/" element={<EditCourse />}/>
                 <Route path="/admin/suport" element={<SuportAdmin />}/>
                 <Route path="/admin/suport/:id" element={<SuportDetails />}/>
                 <Route path="*" element={<NotFound />} />
 
                <Route path="/students" element={<StudentsHome />} /> 
-               <Route path="/students/classes" element={<StudentsClasses />}/>
+               <Route path="/students/courses/:id/class/:idclass" element={<StudentsClasses />}/>
+               <Route path="/students/courses/:id/quiz" element={<Quiz />}/>
                <Route path="/students/edit-perfil" element={<EditPerfil />} /> 
                <Route path="/students/suport" element={<StudentsSuport />} />
             </Routes>
